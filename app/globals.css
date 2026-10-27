@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-cream: #e9dcc7;
+  --ink-espresso: #2a1e17;
+  --ink-roast: #3b2112;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-cream: var(--bg-cream);
+  --color-espresso: var(--ink-espresso);
+  --color-roast: var(--ink-roast);
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  --font-editorial: var(--font-fraunces), Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--bg-cream);
+  scrollbar-gutter: stable;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-cream);
+  color: var(--ink-espresso);
+  overflow-x: clip;
+}
+
+/* Lenis recommended base styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Outlined display text for the submerged SIP */
+.text-stroke-cream {
+  -webkit-text-stroke: 2px #f5efe6;
+  color: transparent;
 }
