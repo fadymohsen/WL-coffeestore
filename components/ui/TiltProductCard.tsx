@@ -66,7 +66,7 @@ export default function TiltProductCard({
         </button>
       </div>
 
-      <div className="relative mb-3 flex h-24 items-center [@media(max-height:760px)]:hidden justify-center overflow-hidden rounded-xl bg-[#e5d7c3]/75">
+      <div className="relative mb-3 flex h-24 items-center max-md:hidden [@media(max-height:760px)]:hidden justify-center overflow-hidden rounded-xl bg-[#e5d7c3]/75">
         <div
           className="flex h-20 w-14 flex-col items-center justify-between rounded-lg border border-white/30 p-1.5 shadow-lg"
           style={{ backgroundColor: product.bagColor }}
@@ -86,7 +86,7 @@ export default function TiltProductCard({
       <h3 className="font-editorial text-lg leading-tight text-espresso">{product.title}</h3>
       <p className="mb-2 text-[11px] text-[#6e5644]">{product.region}</p>
 
-      <div className="mb-3.5 flex flex-wrap gap-1 [@media(max-height:820px)]:hidden">
+      <div className="mb-3.5 flex flex-wrap gap-1 max-md:hidden [@media(max-height:820px)]:hidden">
         {product.tastingNotes.map((note) => (
           <span
             key={note}

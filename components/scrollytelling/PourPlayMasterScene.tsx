@@ -214,36 +214,36 @@ export default function PourPlayMasterScene() {
 
   return (
     <section ref={containerRef} className="relative h-[550vh] w-full">
-      <div className="sticky top-0 isolate h-screen w-full overflow-hidden bg-white">
+      <div className="sticky top-0 isolate h-screen w-full overflow-hidden bg-[#e6d7bd] md:bg-white">
         {/* LAYER 0: giant display type that sits "behind" the video subject */}
         <div className="absolute inset-0 z-0">
-          <div className="s1 absolute inset-x-0 top-[24%] flex items-baseline justify-between px-6 md:px-16">
-            <h1 className={`intro invisible ${display} text-[clamp(3rem,12.5vw,11rem)] text-roast`}>GRIND</h1>
-            <h1 className={`intro invisible ${display} text-[clamp(3rem,12.5vw,11rem)] text-[#c29576]`}>PLAY</h1>
+          <div className="s1 absolute inset-x-0 top-[10%] flex flex-col items-start px-6 md:top-[24%] md:flex-row md:items-baseline md:justify-between md:px-16">
+            <h1 className={`intro invisible ${display} text-[clamp(3.5rem,21vw,6rem)] text-roast md:text-[clamp(3rem,12.5vw,11rem)]`}>GRIND</h1>
+            <h1 className={`intro invisible ${display} self-end text-[clamp(3.5rem,21vw,6rem)] text-[#c29576] md:self-auto md:text-[clamp(3rem,12.5vw,11rem)]`}>PLAY</h1>
           </div>
 
-          <div className="s2a invisible absolute inset-x-0 top-[30%] overflow-hidden">
+          <div className="s2a invisible absolute inset-x-0 top-[10%] overflow-hidden md:top-[30%]">
             <h2
-              className={`s2a-word ${display} whitespace-nowrap text-center text-[clamp(6rem,24vw,20rem)] text-[#b8866b]/80`}
+              className={`s2a-word ${display} whitespace-nowrap text-center text-[clamp(4rem,26vw,7rem)] text-[#b8866b]/80 md:text-[clamp(6rem,24vw,20rem)]`}
             >
               GRIND
             </h2>
           </div>
 
-          <div className="s2b invisible absolute left-6 top-[20%] md:left-16">
-            <h2 className={`${display} text-[clamp(5rem,15vw,12rem)] text-roast`}>POUR</h2>
-            <div className={`${display} -mt-2 text-[clamp(4rem,12vw,9rem)] text-[#c29576]`}>
+          <div className="s2b invisible absolute left-6 top-[10%] md:left-16 md:top-[20%]">
+            <h2 className={`${display} text-[clamp(3.5rem,19vw,6rem)] text-roast md:text-[clamp(5rem,15vw,12rem)]`}>POUR</h2>
+            <div className={`${display} -mt-2 text-[clamp(3rem,15vw,5rem)] text-[#c29576] md:text-[clamp(4rem,12vw,9rem)]`}>
               Ritual
             </div>
           </div>
 
-          <div className="s3 invisible absolute inset-x-0 top-[12%] px-6 md:px-16">
-            <h2 className={`${display} text-[clamp(5rem,16vw,13rem)] text-roast`}>SIP</h2>
+          <div className="s3 invisible absolute inset-x-0 top-[14%] px-6 md:top-[12%] md:px-16">
+            <h2 className={`${display} text-[clamp(4rem,22vw,7rem)] text-roast md:text-[clamp(5rem,16vw,13rem)]`}>SIP</h2>
           </div>
         </div>
 
         {/* LAYER 1: the 240-frame video. multiply lets dark objects occlude the type behind */}
-        <div className="pointer-events-none absolute inset-0 z-10 mix-blend-multiply">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[50svh] [mask-image:linear-gradient(to_bottom,transparent,#000_24%)] md:inset-0 md:h-auto md:[mask-image:none] md:mix-blend-multiply">
           <ScrollVideoCanvas
             ref={canvasRef}
             totalFrames={TOTAL_FRAMES}
@@ -258,12 +258,12 @@ export default function PourPlayMasterScene() {
         <div className="pointer-events-none absolute inset-0 z-20">
           {/* Stage 1 */}
           <div className="s1 absolute inset-0">
-            <div className="intro invisible absolute inset-x-0 top-[16%] flex items-center gap-3 px-6 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5c4332] md:px-16 md:text-xs">
+            <div className="intro invisible absolute inset-x-0 top-[16%] hidden items-center gap-3 md:flex px-6 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5c4332] md:px-16 md:text-xs">
               <span>POUR / PLAY</span>
               <span>•</span>
               <span>Single Origin Extraction</span>
             </div>
-            <div className="intro invisible pointer-events-auto absolute bottom-16 left-6 right-6 max-w-xs rounded-2xl bg-[#f6efe2]/85 p-4 backdrop-blur-md md:rounded-none md:bg-transparent md:p-0 md:backdrop-blur-none md:left-16 md:right-auto">
+            <div className="intro invisible pointer-events-auto absolute left-6 right-6 top-[max(30%,14rem)] max-w-xs md:bottom-16 md:left-16 md:right-auto md:top-auto">
               <p className="mb-5 text-xs leading-relaxed text-[#4a372b] md:text-sm">
                 Precision-milled conical burrs engineered to preserve delicate floral
                 aromatics from whole roasted bean to uniform extraction bed.
@@ -284,7 +284,7 @@ export default function PourPlayMasterScene() {
 
           {/* Stage 2A */}
           <div className="s2a invisible absolute inset-0">
-            <div className="pointer-events-auto absolute bottom-16 left-6 right-6 max-w-xs rounded-2xl bg-[#f6efe2]/85 p-4 backdrop-blur-md md:rounded-none md:bg-transparent md:p-0 md:backdrop-blur-none md:left-16 md:right-auto">
+            <div className="pointer-events-auto absolute left-6 right-6 top-[max(30%,14rem)] max-w-xs md:bottom-16 md:left-16 md:right-auto md:top-auto">
               <p className="mb-4 text-xs leading-relaxed text-[#4a372b]">
                 Zero-retention vertical chute disperses grounds directly into your filter
                 cone with micrometer consistency.
@@ -300,7 +300,7 @@ export default function PourPlayMasterScene() {
 
           {/* Stage 2B */}
           <div className="s2b invisible absolute inset-0">
-            <div className="absolute bottom-16 left-6 right-6 max-w-xs rounded-2xl bg-[#f6efe2]/85 p-4 backdrop-blur-md md:rounded-none md:bg-transparent md:p-0 md:backdrop-blur-none md:bottom-[14%] md:left-auto md:right-16">
+            <div className="absolute left-6 right-6 top-[max(30%,14rem)] max-w-xs md:bottom-[14%] md:left-auto md:right-16 md:top-auto">
               <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6e4f3a]">
                 Chapter 02 · Thermal Bloom
               </span>
@@ -338,9 +338,9 @@ export default function PourPlayMasterScene() {
                 Chapter 03 · Golden Crema
               </span>
             </div>
-            <div className="absolute inset-x-0 bottom-[8%] flex justify-end px-6 md:px-16">
+            <div className="absolute inset-x-0 bottom-[6%] flex justify-start px-6 md:bottom-[8%] md:justify-end md:px-16">
               <h2
-                className={`${display} text-stroke-cream text-[clamp(5rem,16vw,13rem)] drop-shadow-[0_6px_24px_rgba(0,0,0,0.35)]`}
+                className={`${display} text-stroke-cream text-[clamp(4rem,22vw,7rem)] md:text-[clamp(5rem,16vw,13rem)] drop-shadow-[0_6px_24px_rgba(0,0,0,0.35)]`}
               >
                 SIP
               </h2>
@@ -363,7 +363,7 @@ export default function PourPlayMasterScene() {
               </button>
             </div>
 
-            <div className="pointer-events-auto absolute inset-x-0 bottom-20 flex snap-x gap-3 overflow-x-auto px-6 pb-2 md:contents">
+            <div className="pointer-events-auto absolute inset-x-0 top-[max(26%,12.5rem)] flex snap-x gap-3 overflow-x-auto px-6 py-4 md:contents">
               <TiltProductCard
                 product={COFFEE_CATALOG[0]}
                 defaultRotation={-3}
