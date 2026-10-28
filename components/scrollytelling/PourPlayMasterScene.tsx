@@ -5,165 +5,108 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, ChevronDown, Compass, RotateCcw } from "lucide-react";
-import ScrollVideoCanvas, { type ScrollVideoCanvasHandle } from "./ScrollVideoCanvas";
+import ScrollVideoScenes, { type ScrollVideoScenesHandle } from "./ScrollVideoScenes";
 import TiltProductCard from "@/components/ui/TiltProductCard";
 import { scrollToProgress, setScrollLocked } from "@/components/providers/SmoothScrollProvider";
 import { COFFEE_CATALOG, useShopStore } from "@/store/useShopStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOTAL_FRAMES = 240;
-const FPS = 24;
-/** Scroll progress the page eases to automatically once the intro ends. */
-const INTRO_NUDGE = 0.09;
-/** Last frame of the bean pour: the intro plays 0..INTRO_END, scrolling takes over from there. */
-const INTRO_END = 52;
-/** Steam loop at the end: frames LOOP_A..LOOP_B with an X-frame cross-fade for a seamless wrap. */
-const LOOP_A = 212;
-const LOOP_B = TOTAL_FRAMES - 1;
-const LOOP_X = 8;
-const LOOP_P = LOOP_B - LOOP_A - LOOP_X;
-const LOOP_AT = 0.985;
-const STAGE_STOPS = [0, 0.15, 0.4, 0.7, 0.97];
+/**
+ * Each scene owns a slice of the scroll: beans on load, then the grinder, the pour, and the wave into the cup.
+ * Entering a slice plays that scene's clip; the scroll position only chooses which clip is on.
+ */
+const SCENE_ENDS = [0.06, 0.2, 0.5, 1];
+const STAGE_STOPS = [0, 0.2, 0.5, 0.75, 1];
 
-/** Reduced-motion users get one still per chapter instead of a scrubbed sequence. */
-const snapFrame = (f: number) => (f < 109 ? INTRO_END : f < 181 ? 155 : 235);
+const sceneAt = (p: number) => {
+  const i = SCENE_ENDS.findIndex((end) => p < end);
+  return i === -1 ? SCENE_ENDS.length - 1 : i;
+};
 
 export default function PourPlayMasterScene() {
   const containerRef = useRef<HTMLElement>(null);
-  const canvasRef = useRef<ScrollVideoCanvasHandle>(null);
+  const videoRef = useRef<ScrollVideoScenesHandle>(null);
   const percentRef = useRef<HTMLSpanElement>(null);
   const progressRef = useRef(0);
   const [recipeOpen, setRecipeOpen] = useState(false);
   const setCartOpen = useShopStore((s) => s.setCartOpen);
 
   const introStarted = useRef(false);
-  const heroReady = useRef(false);
+  const videoReady = useRef(false);
+  const introEnded = useRef<(() => void) | null>(null);
+  const [reducedMotion] = useState(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const startIntro = useRef<(() => void) | null>(null);
 
   useGSAP(
     () => {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const playhead = { frame: INTRO_END };
       const introDone = { current: false };
-      let atEnd = false;
-
-      // blend neighbouring frames by the fractional part so 24fps footage scrubs smoothly at 60fps
-      const paint = (frame: number) => {
-        const i = Math.floor(frame);
-        const a = frame - i;
-        canvasRef.current?.draw(
-          i,
-          a > 0.02 && i < TOTAL_FRAMES - 1 ? { frame: i + 1, alpha: a } : undefined
-        );
-      };
-      let loopT = 0;
+      let scene = -1;
 
       const trigger = {
         trigger: containerRef.current,
         start: "top top",
         end: "bottom bottom",
-        scrub: true as const,
       };
 
-      // scroll range covers INTRO_END..last frame; the pour before that is the intro
-      gsap.to(playhead, {
-        frame: TOTAL_FRAMES - 1,
-        ease: "none",
-        scrollTrigger: trigger,
-        onUpdate: () => {
-          if (!introDone.current || atEnd) return;
-          paint(reduced ? snapFrame(playhead.frame) : playhead.frame);
-        },
-      });
+      // scroll only picks the scene; the scene's own clip does the playing
+      const syncScene = (p: number) => {
+        const next = sceneAt(p);
+        if (next === scene) return;
+        scene = next;
+        videoRef.current?.show(next);
+      };
 
       ScrollTrigger.create({
         ...trigger,
-        scrub: undefined,
         onUpdate: (self) => {
           progressRef.current = self.progress;
           if (percentRef.current) {
             percentRef.current.textContent = `${Math.round(self.progress * 100)}%`;
           }
-          // back at the very top: pour the beans again
-          if (introDone.current && !reduced && self.direction === -1 && self.progress < 0.01) {
-            replay();
-            return;
-          }
-          const end = self.progress >= LOOP_AT;
-          if (end === atEnd) return;
-          atEnd = end;
-          if (end && !reduced) loopT = LOOP_P - LOOP_X;
-          if (!end) paint(playhead.frame);
+          if (introDone.current) syncScene(self.progress);
         },
       });
 
-      // keep the steam moving once the user reaches the end
-      const loopTick = () => {
-        if (!atEnd || !introDone.current) return;
-        loopT = (loopT + gsap.ticker.deltaRatio(FPS)) % LOOP_P;
-        const main = LOOP_A + LOOP_X + loopT;
-        const fadeStart = LOOP_P - LOOP_X;
-        canvasRef.current?.draw(
-          main,
-          loopT >= fadeStart
-            ? { frame: LOOP_A + (loopT - fadeStart), alpha: (loopT - fadeStart) / LOOP_X }
-            : undefined
-        );
-      };
-      if (!reduced) gsap.ticker.add(loopTick);
+      // text for each scene, on the same slices of scroll as the video
+      const tl = gsap.timeline({
+        defaults: { ease: "power2.out" },
+        scrollTrigger: { ...trigger, scrub: true },
+      });
 
-      const tl = gsap.timeline({ defaults: { ease: "power2.out" }, scrollTrigger: trigger });
+      // Scene 1 (0 - 20%): GRIND / PLAY lifts away as the grinder splits open, then GRIND tracks sideways
+      tl.to(".s1", { y: -130, autoAlpha: 0, duration: 0.08, ease: "power2.in" }, 0.01)
+        .fromTo(".s2a", { y: 90, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.05 }, 0.08)
+        .fromTo(".s2a-word", { xPercent: 10 }, { xPercent: -10, duration: 0.2, ease: "none" }, 0.08)
+        .to(".s2a", { y: -110, autoAlpha: 0, duration: 0.04, ease: "power2.in" }, 0.2);
 
-      // Stage 1: GRIND / PLAY lifts away as the grinder splits open
-      tl.to(".s1", { y: -130, autoAlpha: 0, duration: 0.08, ease: "power2.in" }, 0.01);
+      // Scene 2 (20 - 50%): POUR ritual
+      tl.fromTo(".s2b", { x: -60, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.05 }, 0.25)
+        .to(".s2b", { y: -90, autoAlpha: 0, duration: 0.04, ease: "power2.in" }, 0.44);
 
-      // Stage 2A: exploded burrs, kinetic GRIND tracks sideways
-      tl.fromTo(".s2a", { y: 90, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.06 }, 0.05)
-        .fromTo(".s2a-word", { xPercent: 10 }, { xPercent: -10, duration: 0.24, ease: "none" }, 0.05)
-        .to(".s2a", { y: -110, autoAlpha: 0, duration: 0.05, ease: "power2.in" }, 0.27);
+      // Scene 3 (50 - 75%): espresso wave, SIP / SIP
+      tl.fromTo(".s3", { y: 70, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.05 }, 0.53)
+        .to(".s3", { y: -80, autoAlpha: 0, duration: 0.04, ease: "power2.in" }, 0.7);
 
-      // Stage 2B: POUR ritual
-      tl.fromTo(".s2b", { x: -60, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.06 }, 0.32)
-        .to(".s2b", { y: -90, autoAlpha: 0, duration: 0.05, ease: "power2.in" }, 0.62);
-
-      // Stage 3: espresso wave, SIP / SIP
-      tl.fromTo(".s3", { y: 70, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.05 }, 0.67)
-        .to(".s3", { y: -80, autoAlpha: 0, duration: 0.04, ease: "power2.in" }, 0.79);
-
-      // Stage 4: ceramic mug + cards
+      // Scene 4 (75 - 100%): ceramic mug + cards
       tl.fromTo(
         ".s4",
         { y: 60, autoAlpha: 0, scale: 0.96 },
-        { y: 0, autoAlpha: 1, scale: 1, duration: 0.1, ease: "power3.out" },
-        0.84
+        { y: 0, autoAlpha: 1, scale: 1, duration: 0.08, ease: "power3.out" },
+        0.78
       );
 
       // pad so the timeline spans exactly 0..1 of the scroll range
-      tl.to({}, { duration: 0.06 }, 0.94);
+      tl.to({}, { duration: 0.14 }, 0.86);
 
       // ---- Intro: pour the beans on load with scroll locked, then hand over to scroll ----
       const finishIntro = () => {
+        if (introDone.current) return;
         introDone.current = true;
         setScrollLocked(false, "intro");
-        paint(playhead.frame);
-        // nudge the page down so the grinder starts to open and scrolling is discoverable
-        scrollToProgress(INTRO_NUDGE, 2);
+        syncScene(progressRef.current);
         gsap.to(".intro-hint", { autoAlpha: 1, duration: 0.6 });
-      };
-
-      const replay = () => {
-        introDone.current = false;
-        setScrollLocked(true, "intro");
-        gsap.set(".intro-hint", { autoAlpha: 0 });
-        const f = { v: 0 };
-        gsap.to(f, {
-          v: INTRO_END,
-          duration: INTRO_END / FPS,
-          ease: "none",
-          onUpdate: () => paint(f.v),
-          onComplete: finishIntro,
-        });
       };
 
       const skip = reduced || window.scrollY > 24;
@@ -172,32 +115,24 @@ export default function PourPlayMasterScene() {
         gsap.set(".intro", { autoAlpha: 1, y: 0 });
         gsap.set(".intro-hint", { autoAlpha: 0 });
         introDone.current = true;
-        paint(reduced ? snapFrame(playhead.frame) : playhead.frame);
+        startIntro.current = () => syncScene(progressRef.current);
       } else {
         window.scrollTo(0, 0);
         setScrollLocked(true, "intro");
+        introEnded.current = finishIntro;
         startIntro.current = () => {
           if (introStarted.current) return;
           introStarted.current = true;
-          const f = { v: 0 };
-          const intro = gsap.timeline({ onComplete: finishIntro });
-          intro.to(
-            f,
-            {
-              v: INTRO_END,
-              duration: INTRO_END / FPS,
-              ease: "none",
-              onUpdate: () => paint(f.v),
-            },
-            0
-          );
-          intro.to(".intro", { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.12, ease: "power3.out" }, 0.25);
+          scene = 0;
+          videoRef.current?.show(0);
+          gsap.to(".intro", { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.12, ease: "power3.out", delay: 0.25 });
+          // never keep the page locked if the clip stalls
+          gsap.delayedCall(4.5, finishIntro);
         };
-        if (heroReady.current) startIntro.current();
       }
+      if (videoReady.current) startIntro.current();
 
       return () => {
-        gsap.ticker.remove(loopTick);
         setScrollLocked(false, "intro");
       };
     },
@@ -213,7 +148,7 @@ export default function PourPlayMasterScene() {
   const display = "font-editorial leading-[0.85] tracking-tight";
 
   return (
-    <section ref={containerRef} className="relative h-[550vh] w-full">
+    <section ref={containerRef} className="relative h-[600vh] w-full">
       <div className="sticky top-0 isolate h-screen w-full overflow-hidden bg-[#e6d7bd] md:bg-white">
         {/* LAYER 0: giant display type that sits "behind" the video subject */}
         <div className="absolute inset-0 z-0">
@@ -242,15 +177,16 @@ export default function PourPlayMasterScene() {
           </div>
         </div>
 
-        {/* LAYER 1: the 240-frame video. multiply lets dark objects occlude the type behind */}
+        {/* LAYER 1: the scene clips. multiply lets dark objects occlude the type behind */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[50svh] [mask-image:linear-gradient(to_bottom,transparent,#000_24%)] md:inset-0 md:h-auto md:[mask-image:none] md:mix-blend-multiply">
-          <ScrollVideoCanvas
-            ref={canvasRef}
-            totalFrames={TOTAL_FRAMES}
-            onHeroReady={() => {
-              heroReady.current = true;
+          <ScrollVideoScenes
+            ref={videoRef}
+            still={reducedMotion}
+            onReady={() => {
+              videoReady.current = true;
               startIntro.current?.();
             }}
+            onIntroEnd={() => introEnded.current?.()}
           />
         </div>
 
@@ -290,7 +226,7 @@ export default function PourPlayMasterScene() {
                 cone with micrometer consistency.
               </p>
               <button
-                onClick={() => scrollToProgress(0.52)}
+                onClick={() => scrollToProgress(0.3)}
                 className="rounded-full bg-espresso px-5 py-2.5 text-[11px] font-semibold uppercase tracking-widest text-cream transition hover:bg-[#3e2a1e]"
               >
                 Explore Pour
