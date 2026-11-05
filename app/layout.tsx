@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans, Noto_Naskh_Arabic } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 
-const fraunces = Fraunces({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["700", "800", "900"],
-  variable: "--font-fraunces",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -17,19 +17,23 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const notoArabic = Noto_Naskh_Arabic({
+  subsets: ["arabic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-noto-arabic",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "POUR / PLAY — Artisanal Coffee Extraction",
+  title: "DIWAN — قهوة لكل ثقافة",
   description:
-    "Interactive scrollytelling experience from whole roasted bean to ceramic cup.",
+    "ديوان قهوة للذوق المصري. طعم يعتمد عليه، واختيار واضح، وتجربة لها شخصية. Coffee for every culture.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${jakarta.variable}`}>
-      <body
-        suppressHydrationWarning
-        className="font-sans antialiased selection:bg-roast selection:text-cream"
-      >
+    <html lang="ar" dir="ltr" className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable}`}>
+      <body suppressHydrationWarning className="font-sans antialiased">
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>

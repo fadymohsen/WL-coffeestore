@@ -1,27 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --bg-cream: #e9dcc7;
-  --ink-espresso: #2a1e17;
-  --ink-roast: #3b2112;
+  /* DIWAN Brand Palette */
+  --diwan-green: #0E3A33;
+  --diwan-sandy: #F4ECDC;
+  --diwan-ink: #16211E;
+  --diwan-aqeeq: #A8432C;
+
+  /* Neutrals */
+  --n-100: #F7F4ED;
+  --n-200: #E4DFD3;
+  --n-300: #BDB5A6;
+  --n-400: #8A8172;
+  --n-500: #4A463F;
+
+  /* Functional (UI only) */
+  --color-success: #2E6B4F;
+  --color-error: #A8322F;
+  --color-warning: #9A6B12;
+  --color-info: #2A5B77;
 }
 
 @theme inline {
-  --color-cream: var(--bg-cream);
-  --color-espresso: var(--ink-espresso);
-  --color-roast: var(--ink-roast);
+  --color-sandy: var(--diwan-sandy);
+  --color-green: var(--diwan-green);
+  --color-ink: var(--diwan-ink);
+  --color-aqeeq: var(--diwan-aqeeq);
+  --color-n100: var(--n-100);
+  --color-n200: var(--n-200);
+  --color-n300: var(--n-300);
+  --color-n400: var(--n-400);
+  --color-n500: var(--n-500);
   --font-sans: var(--font-jakarta), system-ui, sans-serif;
-  --font-editorial: var(--font-fraunces), Georgia, serif;
+  --font-editorial: var(--font-playfair), Georgia, serif;
+  --font-arabic: var(--font-noto-arabic), system-ui, sans-serif;
 }
 
 html {
-  background: var(--bg-cream);
+  background: var(--diwan-sandy);
   scrollbar-gutter: stable;
 }
 
 body {
-  background: var(--bg-cream);
-  color: var(--ink-espresso);
+  background: var(--diwan-sandy);
+  color: var(--diwan-ink);
   overflow-x: clip;
 }
 
@@ -37,8 +59,14 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Outlined display text for the submerged SIP */
-.text-stroke-cream {
-  -webkit-text-stroke: 2px #f5efe6;
+/* Outlined display text */
+.text-stroke-sandy {
+  -webkit-text-stroke: 2px var(--diwan-sandy);
   color: transparent;
+}
+
+/* Selection */
+::selection {
+  background: var(--diwan-green);
+  color: var(--diwan-sandy);
 }

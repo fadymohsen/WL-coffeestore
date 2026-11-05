@@ -2,45 +2,70 @@ import { create } from "zustand";
 
 export interface CoffeeProduct {
   id: string;
-  category: "ORIGIN" | "ROAST" | "FLAVOR";
+  category: "توليفة" | "مختصة" | "تركي";
+  categoryEn: "BLEND" | "SPECIALTY" | "TURKISH";
   title: string;
+  titleAr: string;
   region: string;
   tastingNotes: string[];
   price: number;
   weight: string;
   bagColor: string;
+  description: string;
 }
 
 export const COFFEE_CATALOG: CoffeeProduct[] = [
   {
-    id: "origin-ethiopia",
-    category: "ORIGIN",
-    title: "Halo Beriti",
-    region: "Yirgacheffe · 2,150m",
-    tastingNotes: ["Bergamot", "Jasmine", "Peach"],
-    price: 26,
+    id: "uns-blend",
+    category: "توليفة",
+    categoryEn: "BLEND",
+    title: "Uns",
+    titleAr: "أُنس",
+    region: "توليفة يومية مألوفة",
+    tastingNotes: ["متوازن", "شوكولاتة", "مكسرات"],
+    price: 120,
     weight: "250g",
-    bagColor: "#8FA9B3",
+    bagColor: "#0E3A33",
+    description: "توليفة يومية مألوفة، واضحة وسهلة الاختيار. متاحة سادة أو محوج.",
   },
   {
-    id: "roast-colombia",
-    category: "ROAST",
-    title: "Pink Bourbon",
-    region: "Huila · Small Lot",
-    tastingNotes: ["Panela", "Blood Orange", "Praline"],
-    price: 29,
+    id: "majlis-blend",
+    category: "توليفة",
+    categoryEn: "BLEND",
+    title: "Majlis",
+    titleAr: "مجلس",
+    region: "توليفة للضيافة",
+    tastingNotes: ["غني", "كراميل", "توابل"],
+    price: 145,
     weight: "250g",
-    bagColor: "#C87D64",
+    bagColor: "#A8432C",
+    description: "توليفة للمجالس والضيافة. طعم غني يليق بالمناسبات.",
   },
   {
-    id: "flavor-kenya",
-    category: "FLAVOR",
-    title: "Gatomboya AA",
-    region: "Nyeri · Washed SL28",
-    tastingNotes: ["Blackcurrant", "Hibiscus", "Cacao"],
-    price: 32,
+    id: "rihla-ethiopia",
+    category: "مختصة",
+    categoryEn: "SPECIALTY",
+    title: "Rihla",
+    titleAr: "رحلة",
+    region: "إثيوبيا · يرغاتشيفي",
+    tastingNotes: ["زهور", "خوخ", "برغموت"],
+    price: 185,
     weight: "250g",
-    bagColor: "#D8C5AE",
+    bagColor: "#2A5B77",
+    description: "قهوة مختصة من إثيوبيا. لمن يحب يستكشف مذاقات جديدة.",
+  },
+  {
+    id: "sultan-turkish",
+    category: "تركي",
+    categoryEn: "TURKISH",
+    title: "Sultan",
+    titleAr: "سلطان",
+    region: "تحميص غامق · محوج",
+    tastingNotes: ["هيل", "تحميص غامق", "كريمي"],
+    price: 95,
+    weight: "200g",
+    bagColor: "#4A463F",
+    description: "قهوة تركي بالهيل. تحميص غامق وطحن ناعم للركوة.",
   },
 ];
 

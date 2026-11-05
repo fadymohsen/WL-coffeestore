@@ -31,53 +31,54 @@ export default function CartDrawer() {
     >
       <aside
         role="dialog"
-        aria-label="Your bag"
+        aria-label="حقيبتك"
         data-lenis-prevent
         onClick={(e) => e.stopPropagation()}
-        className="flex h-full w-full max-w-md flex-col justify-between overflow-y-auto border-l border-espresso/15 bg-[#f6efe2] p-6 shadow-2xl"
+        className="flex h-full w-full max-w-md flex-col justify-between overflow-y-auto border-l border-n200 bg-n100 p-6 shadow-2xl"
       >
         <div>
-          <div className="flex items-center justify-between border-b border-espresso/15 pb-4">
-            <h3 className="font-editorial text-2xl">Your Bag ({totalItems})</h3>
+          <div className="flex items-center justify-between border-b border-n200 pb-4">
+            <h3 className="font-editorial text-2xl text-green">حقيبتك ({totalItems})</h3>
             <button
               onClick={() => setCartOpen(false)}
-              aria-label="Close bag"
-              className="rounded-full p-2 hover:bg-espresso/10"
+              aria-label="إغلاق الحقيبة"
+              className="rounded-full p-2 hover:bg-green/10"
             >
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5 text-green" />
             </button>
           </div>
 
           <div className="mt-4 space-y-3">
             {items.length === 0 && (
-              <p className="py-10 text-center text-sm text-[#6e5644]">Your bag is empty.</p>
+              <p className="py-10 text-center text-sm text-n400">الحقيبة فاضية</p>
             )}
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between rounded-xl border border-espresso/10 bg-cream/70 p-3"
+                className="flex items-center justify-between rounded-[10px] border border-n200 bg-sandy/70 p-3"
               >
                 <div>
-                  <div className="text-sm font-semibold">{item.title}</div>
-                  <div className="text-xs text-[#6e5644]">
-                    {item.region} · ${item.price}
+                  <div className="text-sm font-semibold text-green">{item.title}</div>
+                  <div className="font-arabic text-xs text-n400">{item.titleAr}</div>
+                  <div className="text-xs text-n400">
+                    {item.region} · {item.price} EGP
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => removeFromCart(item.id)}
                     aria-label={`Remove one ${item.title}`}
-                    className="rounded-full bg-espresso/10 p-1"
+                    className="rounded-full bg-green/10 p-1"
                   >
-                    <Minus className="h-3.5 w-3.5" />
+                    <Minus className="h-3.5 w-3.5 text-green" />
                   </button>
-                  <span className="w-5 text-center text-xs font-bold">{cart[item.id]}</span>
+                  <span className="w-5 text-center text-xs font-bold text-green">{cart[item.id]}</span>
                   <button
                     onClick={() => addToCart(item.id)}
                     aria-label={`Add one ${item.title}`}
-                    className="rounded-full bg-espresso/10 p-1"
+                    className="rounded-full bg-green/10 p-1"
                   >
-                    <Plus className="h-3.5 w-3.5" />
+                    <Plus className="h-3.5 w-3.5 text-green" />
                   </button>
                 </div>
               </div>
@@ -85,16 +86,16 @@ export default function CartDrawer() {
           </div>
         </div>
 
-        <div className="border-t border-espresso/15 pt-4">
-          <div className="mb-4 flex items-center justify-between text-sm font-bold">
-            <span>Subtotal</span>
-            <span>${subtotal}.00</span>
+        <div className="border-t border-n200 pt-4">
+          <div className="mb-4 flex items-center justify-between text-sm font-bold text-green">
+            <span>الإجمالي</span>
+            <span>{subtotal} EGP</span>
           </div>
           <button
             onClick={() => setCartOpen(false)}
-            className="w-full rounded-full bg-espresso py-3 text-xs font-bold uppercase tracking-widest text-cream"
+            className="w-full rounded-full bg-green py-3 text-xs font-bold uppercase tracking-widest text-sandy transition hover:bg-green/90"
           >
-            Proceed to Checkout
+            إتمام الطلب
           </button>
         </div>
       </aside>
