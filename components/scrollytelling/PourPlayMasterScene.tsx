@@ -9,6 +9,7 @@ import ScrollVideoScenes, { type ScrollVideoScenesHandle } from "./ScrollVideoSc
 import TiltProductCard from "@/components/ui/TiltProductCard";
 import { scrollToProgress, setScrollLocked } from "@/components/providers/SmoothScrollProvider";
 import { COFFEE_CATALOG, useShopStore } from "@/store/useShopStore";
+import { useLocalized, translations } from "@/lib/i18n";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,6 +28,9 @@ export default function PourPlayMasterScene() {
   const progressRef = useRef(0);
   const [recipeOpen, setRecipeOpen] = useState(false);
   const setCartOpen = useShopStore((s) => s.setCartOpen);
+
+  const l = useLocalized();
+  const t = translations;
 
   const introStarted = useRef(false);
   const videoReady = useRef(false);
@@ -156,13 +160,13 @@ export default function PourPlayMasterScene() {
             <h2
               className={`s2a-word ${display} whitespace-nowrap text-center text-[clamp(4rem,26vw,7rem)] text-green/20 md:text-[clamp(6rem,24vw,20rem)]`}
             >
-              طقس القهوة
+              {l(t.coffeeRitual)}
             </h2>
           </div>
 
           <div className="s2b invisible absolute left-5 top-[10%] md:left-20 md:top-[20%]">
             <h2 className={`${display} text-[clamp(3.5rem,19vw,6rem)] text-green md:text-[clamp(5rem,15vw,12rem)]`}>
-              صبّة
+              {l(t.pourWord)}
             </h2>
             <div className={`${display} -mt-2 text-[clamp(3rem,15vw,5rem)] text-aqeeq/60 md:text-[clamp(4rem,12vw,9rem)]`}>
               Pour
@@ -171,7 +175,7 @@ export default function PourPlayMasterScene() {
 
           <div className="s3 invisible absolute inset-x-0 top-[14%] px-5 md:top-[12%] md:px-20">
             <h2 className={`${display} text-[clamp(4rem,22vw,7rem)] text-green md:text-[clamp(5rem,16vw,13rem)]`}>
-              رشفة
+              {l(t.sipWord)}
             </h2>
           </div>
         </div>
@@ -196,26 +200,22 @@ export default function PourPlayMasterScene() {
             <div className="intro invisible absolute inset-x-0 top-[16%] hidden items-center gap-3 px-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-green/60 md:flex md:px-20 md:text-xs">
               <span>DIWAN</span>
               <span>·</span>
-              <span>Coffee for Every Culture</span>
+              <span>{l(t.hero.coffeeForEveryCulture)}</span>
             </div>
             <div className="intro invisible pointer-events-auto absolute left-5 right-5 top-[max(30%,14rem)] max-w-sm md:bottom-16 md:left-20 md:right-auto md:top-auto">
               <p className="mb-5 text-sm leading-relaxed text-n500 md:text-base">
-                ابدأ صباحك بفنجان تعرفه. مذاق ثابت، خيار واضح،
-                وحكاية تبدأ من أول رشفة.
-              </p>
-              <p className="mb-5 text-xs leading-relaxed text-n400">
-                Start your morning with a cup you know. Consistent taste, clear choice, and a story that begins with the first sip.
+                {l(t.hero.tagline)}
               </p>
               <button
                 onClick={() => scrollToProgress(0.95)}
                 className="inline-flex items-center gap-2.5 rounded-full bg-green px-6 py-3 text-xs font-semibold uppercase tracking-widest text-sandy shadow-lg transition hover:bg-green/90"
               >
-                <span>تسوّق الآن</span>
+                <span>{l(t.hero.shopNow)}</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>
             <div className="intro-hint invisible absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-0.5 rounded-full bg-n100/85 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-green backdrop-blur-md">
-              <span>Scroll</span>
+              <span>{l(t.hero.scroll)}</span>
               <ChevronDown className="h-4 w-4 animate-bounce" />
             </div>
           </div>
@@ -224,13 +224,13 @@ export default function PourPlayMasterScene() {
           <div className="s2a invisible absolute inset-0">
             <div className="pointer-events-auto absolute left-5 right-5 top-[max(30%,14rem)] max-w-xs md:bottom-16 md:left-20 md:right-auto md:top-auto">
               <p className="mb-4 text-sm leading-relaxed text-n500">
-                طحن طازج يحافظ على نكهة الحبة كما هي. بدون تعقيد.
+                {l(t.grind.text)}
               </p>
               <button
                 onClick={() => scrollToProgress(0.3)}
                 className="rounded-full bg-green px-5 py-2.5 text-[11px] font-semibold uppercase tracking-widest text-sandy transition hover:bg-green/90"
               >
-                اكتشف الصبّة
+                {l(t.grind.cta)}
               </button>
             </div>
           </div>
@@ -239,30 +239,29 @@ export default function PourPlayMasterScene() {
           <div className="s2b invisible absolute inset-0">
             <div className="absolute left-5 right-5 top-[max(30%,14rem)] max-w-xs md:bottom-[14%] md:left-auto md:right-20 md:top-auto">
               <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-green/60">
-                الطقس الثاني · الصبّة
+                {l(t.pour.label)}
               </span>
               <p className="mt-3 text-sm leading-relaxed text-n500">
-                مياه ساخنة على القهوة بهدوء. كل صبّة تكشف طعم مختلف.
-                بساطة التحضير هي جزء من المتعة.
+                {l(t.pour.text)}
               </p>
               <div className="pointer-events-auto mt-4 flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-green/10 px-3 py-1.5 text-[11px] font-semibold text-green">
-                  93°C · نسبة 1:16 · دقيقتين ونص
+                  93°C · 1:16 · 2:30
                 </span>
                 <button
                   onClick={() => setRecipeOpen((o) => !o)}
                   aria-expanded={recipeOpen}
                   className="rounded-full bg-green px-4 py-1.5 text-[11px] font-semibold text-sandy transition hover:bg-green/90"
                 >
-                  {recipeOpen ? "إخفاء" : "طريقة التحضير"}
+                  {recipeOpen ? l(t.pour.hide) : l(t.pour.recipe)}
                 </button>
               </div>
               {recipeOpen && (
-                <ol className="pointer-events-auto mt-3 space-y-1 rounded-xl bg-n100/90 p-3 text-[11px] leading-snug text-n500 backdrop-blur-md" dir="rtl">
-                  <li>١. ١٥ جرام قهوة مطحونة متوسطة، اغسل الفلتر.</li>
-                  <li>٢. بلل القهوة بـ ٤٥ جرام مياه، انتظر ٣٠ ثانية.</li>
-                  <li>٣. صبّ بحركة دائرية لحد ٢٤٠ جرام.</li>
-                  <li>٤. التصفية تخلص في حوالي دقيقتين و٤٥ ثانية.</li>
+                <ol className="pointer-events-auto mt-3 space-y-1 rounded-xl bg-n100/90 p-3 text-[11px] leading-snug text-n500 backdrop-blur-md">
+                  <li>{l(t.pour.step1)}</li>
+                  <li>{l(t.pour.step2)}</li>
+                  <li>{l(t.pour.step3)}</li>
+                  <li>{l(t.pour.step4)}</li>
                 </ol>
               )}
             </div>
@@ -272,7 +271,7 @@ export default function PourPlayMasterScene() {
           <div className="s3 invisible absolute inset-0">
             <div className="absolute inset-x-0 top-[10%] px-5 md:px-20">
               <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-green/60">
-                الطقس الثالث · الرشفة
+                {l(t.sip.label)}
               </span>
             </div>
             <div className="absolute inset-x-0 bottom-[6%] flex justify-start px-5 md:bottom-[8%] md:justify-end md:px-20">
@@ -287,17 +286,15 @@ export default function PourPlayMasterScene() {
           {/* Stage 4: Shop */}
           <div className="s4 invisible absolute inset-0 flex flex-col items-center px-5 pt-20 md:px-14">
             <div className="pointer-events-auto text-center">
-              <h2 className={`${display} text-4xl text-green sm:text-5xl md:text-6xl`}>
-                اختار
-                <br />
-                فنجانك
+              <h2 className={`${display} whitespace-pre-line text-4xl text-green sm:text-5xl md:text-6xl`}>
+                {l(t.shopScene.choose)}
               </h2>
-              <p className="mt-2 text-sm text-n400">Find Your Cup</p>
+              <p className="mt-2 text-sm text-n400">{l(t.shopScene.findYourCup)}</p>
               <button
                 onClick={() => setCartOpen(true)}
                 className="mt-3 rounded-full bg-green px-5 py-2 text-[11px] font-bold uppercase tracking-widest text-sandy shadow-md transition hover:bg-green/90"
               >
-                تسوّق
+                {l(t.shopScene.shop)}
               </button>
             </div>
 
@@ -324,7 +321,7 @@ export default function PourPlayMasterScene() {
               className="pointer-events-auto absolute bottom-5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-green/10 px-3 py-1.5 text-xs font-semibold text-green transition hover:bg-green/20"
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              <span>العودة للأعلى</span>
+              <span>{l(t.shopScene.backToTop)}</span>
             </button>
           </div>
         </div>

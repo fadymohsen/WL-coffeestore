@@ -6,12 +6,16 @@ import HeaderNav from "@/components/layout/HeaderNav";
 import CartDrawer from "@/components/layout/CartDrawer";
 import Footer from "@/components/layout/Footer";
 import { COFFEE_CATALOG, CoffeeProduct, useShopStore } from "@/store/useShopStore";
+import { useLocalized, useLangStore, translations } from "@/lib/i18n";
+
+const t = translations.shopPage;
+const tp = translations.product;
 
 const FILTERS = [
-  { key: "all", label: "الكل", labelEn: "All" },
-  { key: "BLEND", label: "توليفة", labelEn: "Blend" },
-  { key: "SPECIALTY", label: "مختصة", labelEn: "Specialty" },
-  { key: "TURKISH", label: "تركي", labelEn: "Turkish" },
+  { key: "all", label: t.filters.all },
+  { key: "BLEND", label: t.filters.blend },
+  { key: "SPECIALTY", label: t.filters.specialty },
+  { key: "TURKISH", label: t.filters.turkish },
 ] as const;
 
 function ProductCard({ product }: { product: CoffeeProduct }) {
@@ -19,6 +23,14 @@ function ProductCard({ product }: { product: CoffeeProduct }) {
   const isLiked = useShopStore((s) => !!s.wishlist[product.id]);
   const addToCart = useShopStore((s) => s.addToCart);
   const toggleWishlist = useShopStore((s) => s.toggleWishlist);
+  const l = useLocalized();
+  const lang = useLangStore((s) => s.lang);
+
+  const title = lang === "en" ? product.title : product.titleAr;
+  const subtitle = lang === "en" ? product.titleAr : product.title;
+  const region = lang === "en" ? product.regionEn : product.region;
+  const notes = lang === "en" ? product.tastingNotesEn : product.tastingNotes;
+  const desc = lang === "en" ? product.descriptionEn : product.description;
 
   return (
     <div className="group rounded-[14px] border border-n200 bg-n100 p-5 transition hover:shadow-lg">
@@ -49,13 +61,13 @@ function ProductCard({ product }: { product: CoffeeProduct }) {
       <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-green/50">
         {product.categoryEn}
       </span>
-      <h3 className="mt-1 font-editorial text-xl font-bold text-green">{product.title}</h3>
-      <p className="font-arabic text-sm text-n400">{product.titleAr}</p>
-      <p className="mt-1 text-xs text-n400">{product.region}</p>
+      <h3 className="mt-1 font-editorial text-xl font-bold text-green">{title}</h3>
+      <p className="text-sm text-n400">{subtitle}</p>
+      <p className="mt-1 text-xs text-n400">{region}</p>
 
       {/* Tasting Notes */}
       <div className="mt-3 flex flex-wrap gap-1">
-        {product.tastingNotes.map((note) => (
+        {notes.map((note) => (
           <span
             key={note}
             className="rounded-md bg-green/8 px-2 py-0.5 text-[10px] font-medium text-green"
@@ -66,8 +78,8 @@ function ProductCard({ product }: { product: CoffeeProduct }) {
       </div>
 
       {/* Description */}
-      <p className="mt-3 font-arabic text-xs leading-relaxed text-n400" dir="rtl">
-        {product.description}
+      <p className="mt-3 text-xs leading-relaxed text-n400">
+        {desc}
       </p>
 
       {/* Price + Add */}
@@ -78,7 +90,7 @@ function ProductCard({ product }: { product: CoffeeProduct }) {
           className="flex items-center gap-1.5 rounded-full bg-green px-4 py-2 text-xs font-semibold text-sandy transition hover:bg-green/90"
         >
           <Plus className="h-3.5 w-3.5" />
-          <span>{qty > 0 ? `في الحقيبة (${qty})` : "أضف"}</span>
+          <span>{qty > 0 ? `${l(tp.inBag)} (${qty})` : l(tp.add)}</span>
         </button>
       </div>
     </div>
@@ -87,6 +99,7 @@ function ProductCard({ product }: { product: CoffeeProduct }) {
 
 export default function ShopPage() {
   const [filter, setFilter] = useState<string>("all");
+  const l = useLocalized();
 
   const filtered =
     filter === "all"
@@ -101,13 +114,13 @@ export default function ShopPage() {
       {/* Hero */}
       <section className="flex flex-col items-center px-5 pb-8 pt-28 text-center md:px-20 md:pt-32">
         <span className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-green/50">
-          Shop
+          {l(t.title)}
         </span>
         <h1 className="font-editorial text-4xl font-bold text-green md:text-6xl">
-          المتجر
+          {l(t.title)}
         </h1>
         <p className="mt-3 max-w-md text-sm text-n400">
-          اختار قهوتك. كل توليفة محمّصة بعناية ومُعدّة للذوق المصري.
+          {l(t.subtitle)}
         </p>
       </section>
 
@@ -124,8 +137,7 @@ export default function ShopPage() {
                   : "border border-n200 text-n500 hover:bg-green/10"
               }`}
             >
-              {f.label}
-              <span className="ml-1 text-[10px] opacity-60">{f.labelEn}</span>
+              {l(f.label)}
             </button>
           ))}
         </div>
@@ -140,7 +152,7 @@ export default function ShopPage() {
         </div>
         {filtered.length === 0 && (
           <p className="py-20 text-center text-sm text-n400">
-            لا توجد منتجات في هذا التصنيف حالياً.
+            {l(t.noProducts)}
           </p>
         )}
       </section>
@@ -149,16 +161,13 @@ export default function ShopPage() {
       <section className="mx-auto max-w-[1440px] px-5 pb-16 md:px-20">
         <div className="flex flex-col items-center gap-4 rounded-[14px] bg-green p-10 text-center md:p-16">
           <span className="text-xs font-bold uppercase tracking-[0.22em] text-sandy/50">
-            Gifting · الهدايا
+            {l(t.giftingLabel)}
           </span>
           <h2 className="font-editorial text-3xl font-bold text-sandy md:text-4xl">
-            قهوة تليق بالمناسبات
+            {l(t.giftingTitle)}
           </h2>
-          <p className="max-w-md font-arabic text-sm leading-relaxed text-sandy/70" dir="rtl">
-            تكوينات هدايا مميزة بتغليف يليق. اختار التوليفة والتغليف وإحنا نجهزها.
-          </p>
-          <p className="text-xs text-sandy/50">
-            Premium gift sets with beautiful packaging. Choose the blend and we will prepare it.
+          <p className="max-w-md text-sm leading-relaxed text-sandy/70">
+            {l(t.giftingDesc)}
           </p>
         </div>
       </section>

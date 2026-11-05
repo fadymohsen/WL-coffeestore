@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans, Noto_Naskh_Arabic } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
+import LangSync from "@/components/providers/LangSync";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -32,8 +33,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ar" dir="ltr" className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable}`}>
+    <html lang="en" dir="ltr" suppressHydrationWarning className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable}`}>
       <body suppressHydrationWarning className="font-sans antialiased">
+        <LangSync />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>

@@ -7,11 +7,14 @@ export interface CoffeeProduct {
   title: string;
   titleAr: string;
   region: string;
+  regionEn: string;
   tastingNotes: string[];
+  tastingNotesEn: string[];
   price: number;
   weight: string;
   bagColor: string;
   description: string;
+  descriptionEn: string;
 }
 
 export const COFFEE_CATALOG: CoffeeProduct[] = [
@@ -22,11 +25,14 @@ export const COFFEE_CATALOG: CoffeeProduct[] = [
     title: "Uns",
     titleAr: "أُنس",
     region: "توليفة يومية مألوفة",
+    regionEn: "Familiar Daily Blend",
     tastingNotes: ["متوازن", "شوكولاتة", "مكسرات"],
+    tastingNotesEn: ["Balanced", "Chocolate", "Nuts"],
     price: 120,
     weight: "250g",
     bagColor: "#0E3A33",
     description: "توليفة يومية مألوفة، واضحة وسهلة الاختيار. متاحة سادة أو محوج.",
+    descriptionEn: "A familiar daily blend, clear and easy to choose. Available plain or spiced.",
   },
   {
     id: "majlis-blend",
@@ -35,11 +41,14 @@ export const COFFEE_CATALOG: CoffeeProduct[] = [
     title: "Majlis",
     titleAr: "مجلس",
     region: "توليفة للضيافة",
+    regionEn: "Hospitality Blend",
     tastingNotes: ["غني", "كراميل", "توابل"],
+    tastingNotesEn: ["Rich", "Caramel", "Spices"],
     price: 145,
     weight: "250g",
     bagColor: "#A8432C",
     description: "توليفة للمجالس والضيافة. طعم غني يليق بالمناسبات.",
+    descriptionEn: "A blend for gatherings and hospitality. A rich taste worthy of occasions.",
   },
   {
     id: "rihla-ethiopia",
@@ -48,11 +57,14 @@ export const COFFEE_CATALOG: CoffeeProduct[] = [
     title: "Rihla",
     titleAr: "رحلة",
     region: "إثيوبيا · يرغاتشيفي",
+    regionEn: "Ethiopia · Yirgacheffe",
     tastingNotes: ["زهور", "خوخ", "برغموت"],
+    tastingNotesEn: ["Floral", "Peach", "Bergamot"],
     price: 185,
     weight: "250g",
     bagColor: "#2A5B77",
     description: "قهوة مختصة من إثيوبيا. لمن يحب يستكشف مذاقات جديدة.",
+    descriptionEn: "Specialty coffee from Ethiopia. For those who love to explore new flavors.",
   },
   {
     id: "sultan-turkish",
@@ -61,11 +73,14 @@ export const COFFEE_CATALOG: CoffeeProduct[] = [
     title: "Sultan",
     titleAr: "سلطان",
     region: "تحميص غامق · محوج",
+    regionEn: "Dark Roast · Spiced",
     tastingNotes: ["هيل", "تحميص غامق", "كريمي"],
+    tastingNotesEn: ["Cardamom", "Dark Roast", "Creamy"],
     price: 95,
     weight: "200g",
     bagColor: "#4A463F",
     description: "قهوة تركي بالهيل. تحميص غامق وطحن ناعم للركوة.",
+    descriptionEn: "Turkish coffee with cardamom. Dark roast and finely ground for the cezve.",
   },
 ];
 

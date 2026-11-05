@@ -4,6 +4,9 @@ import type { MouseEvent } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { Heart, Plus } from "lucide-react";
 import { CoffeeProduct, useShopStore } from "@/store/useShopStore";
+import { useLocalized, useLangStore, translations } from "@/lib/i18n";
+
+const t = translations.product;
 
 interface TiltProductCardProps {
   product: CoffeeProduct;
@@ -22,6 +25,9 @@ export default function TiltProductCard({
   const toggleWishlist = useShopStore((s) => s.toggleWishlist);
   const setCartOpen = useShopStore((s) => s.setCartOpen);
 
+  const l = useLocalized();
+  const lang = useLangStore((s) => s.lang);
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const smoothX = useSpring(x, { stiffness: 220, damping: 22 });
@@ -38,6 +44,9 @@ export default function TiltProductCard({
     x.set(0);
     y.set(0);
   };
+
+  const title = lang === "en" ? product.title : product.titleAr;
+  const notes = lang === "en" ? product.tastingNotesEn : product.tastingNotes;
 
   return (
     <motion.div
@@ -83,12 +92,11 @@ export default function TiltProductCard({
         </span>
       </div>
 
-      <h3 className="font-editorial text-lg leading-tight text-green">{product.title}</h3>
-      <p className="font-arabic text-sm text-n400">{product.titleAr}</p>
-      <p className="mb-2 text-[11px] text-n400">{product.region}</p>
+      <h3 className="font-editorial text-lg leading-tight text-green">{title}</h3>
+      <p className="mb-2 text-[11px] text-n400">{lang === "en" ? product.regionEn : product.region}</p>
 
       <div className="mb-3.5 flex flex-wrap gap-1 max-md:hidden [@media(max-height:820px)]:hidden">
-        {product.tastingNotes.map((note) => (
+        {notes.map((note) => (
           <span
             key={note}
             className="rounded-md bg-green/8 px-2 py-0.5 text-[10px] font-medium text-green"
@@ -104,13 +112,13 @@ export default function TiltProductCard({
           className="flex flex-1 items-center justify-center gap-1 rounded-full bg-green px-3 py-2 text-[11px] font-semibold text-sandy transition hover:bg-green/90"
         >
           <Plus className="h-3 w-3" />
-          <span>{qty > 0 ? `في الحقيبة (${qty})` : "أضف للحقيبة"}</span>
+          <span>{qty > 0 ? `${l(t.inBag)} (${qty})` : l(t.addToBag)}</span>
         </button>
         <button
           onClick={() => setCartOpen(true)}
           className="rounded-full border border-green/25 px-3 py-2 text-[11px] font-semibold text-green transition hover:bg-green/10"
         >
-          الحقيبة
+          {l(t.bag)}
         </button>
       </div>
     </motion.div>
