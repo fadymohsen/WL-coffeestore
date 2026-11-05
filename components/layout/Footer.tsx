@@ -55,7 +55,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-sandy/15 pt-6 text-xs text-sandy/40 md:flex-row">
-          <p>&copy; {new Date().getFullYear()} DIWAN Coffee. All rights reserved.</p>
+          <p>&copy; 2025 DIWAN Coffee. All rights reserved.</p>
           <p className="font-arabic">قهوة لكل ثقافة · Coffee for Every Culture</p>
         </div>
       </div>
