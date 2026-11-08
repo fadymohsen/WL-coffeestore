@@ -7,7 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { ArrowRight, ChevronDown, Compass, RotateCcw } from "lucide-react";
 import ScrollVideoScenes, { type ScrollVideoScenesHandle } from "./ScrollVideoScenes";
 import TiltProductCard from "@/components/ui/TiltProductCard";
-import { scrollToProgress, setScrollLocked } from "@/components/providers/SmoothScrollProvider";
+import { scrollToY, setScrollLocked } from "@/components/providers/SmoothScrollProvider";
 import { COFFEE_CATALOG, useShopStore } from "@/store/useShopStore";
 import { useLocalized, translations } from "@/lib/i18n";
 
@@ -134,6 +134,13 @@ export default function PourPlayMasterScene() {
     { scope: containerRef }
   );
 
+  // the scene is only the top of the page now, so its progress is measured against its own height
+  const scrollToProgress = (fraction: number, duration = 1.8) => {
+    const el = containerRef.current;
+    if (!el) return;
+    scrollToY(el.offsetTop + Math.min(1, Math.max(0, fraction)) * (el.offsetHeight - window.innerHeight), duration);
+  };
+
   const nextStop = () => {
     const p = progressRef.current;
     const next = STAGE_STOPS.find((s) => s > p + 0.02);
@@ -148,12 +155,19 @@ export default function PourPlayMasterScene() {
         {/* LAYER 0: Display type behind the video */}
         <div className="absolute inset-0 z-0">
           <div className="s1 absolute inset-x-0 top-[10%] flex flex-col items-start px-5 md:top-[24%] md:flex-row md:items-baseline md:justify-between md:px-20">
-            <h1 className={`intro invisible ${display} text-[clamp(3.5rem,21vw,6rem)] text-green md:text-[clamp(3rem,12.5vw,11rem)]`}>
-              DIWAN
+            <h1 className="intro invisible">
+              <span className="sr-only">DIWAN ديوان</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/assets/diwan/Diwan_Logo_Colour_tight.png"
+                alt=""
+                aria-hidden="true"
+                className="h-24 w-auto md:h-[clamp(11rem,40vh,22rem)]"
+              />
             </h1>
-            <h1 className={`intro invisible ${display} self-end text-[clamp(2.5rem,14vw,4rem)] text-aqeeq/70 md:self-auto md:text-[clamp(2rem,7vw,6rem)]`}>
-              ديوان
-            </h1>
+            <p className="intro invisible self-end font-arabic text-[clamp(2rem,9vw,3rem)] font-bold leading-tight text-aqeeq md:self-auto md:text-[clamp(2rem,4.2vw,4.5rem)]">
+              الحكاية تبدأ بفنجان
+            </p>
           </div>
 
           <div className="s2a invisible absolute inset-x-0 top-[10%] overflow-hidden md:top-[30%]">
@@ -198,7 +212,7 @@ export default function PourPlayMasterScene() {
           {/* Stage 1 — Hero */}
           <div className="s1 absolute inset-0">
             <div className="intro invisible absolute inset-x-0 top-[16%] hidden items-center gap-3 px-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-green/60 md:flex md:px-20 md:text-xs">
-              <span>DIWAN</span>
+              <span>DIWAN ROASTERY · CAIRO</span>
               <span>·</span>
               <span>{l(t.hero.coffeeForEveryCulture)}</span>
             </div>

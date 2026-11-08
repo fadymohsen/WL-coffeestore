@@ -20,8 +20,8 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-3">
           {/* Brand */}
           <div>
-            <span className="font-editorial text-2xl font-bold">DIWAN</span>
-            <p className="mt-1 font-arabic text-sm text-sandy/60">ديوان</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/diwan/Diwan_Logo_Slogan_Reverse_tight.png" alt="ديوان، الحكاية تبدأ بفنجان" className="w-40" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-sandy/70">
               {l(t.brandDesc)}
             </p>
@@ -51,14 +51,14 @@ export default function Footer() {
               {l(t.contactUs)}
             </h4>
             <div className="space-y-2 text-sm text-sandy/70">
-              <p>hello@diwan.coffee</p>
+              <a href="https://instagram.com/diwan_eg" target="_blank" rel="noreferrer" className="hover:text-sandy">@diwan_eg · Instagram · Facebook · TikTok</a>
               <p>{l(t.location)}</p>
             </div>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-sandy/15 pt-6 text-xs text-sandy/40 md:flex-row">
-          <p>&copy; 2025 DIWAN Coffee. All rights reserved.</p>
+          <p>&copy; 2026 DIWAN ROASTERY · CAIRO · @diwan_eg</p>
           <p>{l(t.tagline)}</p>
         </div>
       </div>

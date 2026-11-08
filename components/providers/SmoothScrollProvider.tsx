@@ -27,6 +27,12 @@ export function scrollToProgress(fraction: number, duration = 1.8) {
   else window.scrollTo({ top, behavior: "smooth" });
 }
 
+/** Smooth-scroll to an absolute Y offset. */
+export function scrollToY(top: number, duration = 1.6) {
+  if (lenisInstance) lenisInstance.scrollTo(top, { duration });
+  else window.scrollTo({ top, behavior: "smooth" });
+}
+
 /** Independent keyed locks, so closing the cart can't end the intro lock. */
 export function setScrollLocked(locked: boolean, key = "cart") {
   if (locked) locks.add(key);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Globe, Menu, Search, ShoppingBag, X } from "lucide-react";
 import { scrollToProgress } from "@/components/providers/SmoothScrollProvider";
@@ -14,6 +14,17 @@ export default function HeaderNav() {
   const setCartOpen = useShopStore((s) => s.setCartOpen);
   const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // once the page reaches the DIWAN sections the header gets its own sand bar so it never sits on green
+  const [solid, setSolid] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      const el = document.querySelector(".diwan");
+      setSolid(!!el && el.getBoundingClientRect().top <= 72);
+    };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
 
   const lang = useLangStore((s) => s.lang);
   const toggle = useLangStore((s) => s.toggle);
@@ -22,11 +33,13 @@ export default function HeaderNav() {
   const NAV_LINKS = [
     { href: "/shop", label: l(t.shop) },
     { href: "/our-story", label: l(t.ourStory) },
+    { href: "/#catalog", label: l({ en: "The Nine Blends", ar: "التوليفات التسع" }) },
+    { href: "/#brew", label: l({ en: "Brewing", ar: "التحضير" }) },
   ];
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-4 md:px-12 lg:px-20">
+      <header className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-3 transition-colors duration-300 md:px-12 lg:px-20 ${solid ? "border-b border-n200 bg-sandy/90 backdrop-blur" : ""}`}>
         {/* Logo */}
         <Link
           href="/"
@@ -36,12 +49,11 @@ export default function HeaderNav() {
               scrollToProgress(0);
             }
           }}
-          className="flex items-baseline gap-2"
+          className="flex items-center"
+          aria-label="DIWAN ديوان"
         >
-          <span className="font-editorial text-xl font-bold tracking-tight text-green md:text-2xl">
-            DIWAN
-          </span>
-          <span className="font-arabic text-sm text-green/70 md:text-base">ديوان</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/diwan/Diwan_Logo_Colour_tight.png" alt="ديوان" className="h-12 w-auto md:h-14" />
         </Link>
 
         {/* Desktop Nav */}

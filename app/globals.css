@@ -31,9 +31,15 @@
   --color-n300: var(--n-300);
   --color-n400: var(--n-400);
   --color-n500: var(--n-500);
-  --font-sans: var(--font-jakarta), system-ui, sans-serif;
-  --font-editorial: var(--font-playfair), Georgia, serif;
-  --font-arabic: var(--font-noto-arabic), system-ui, sans-serif;
+  --font-sans: var(--font-plex), system-ui, sans-serif;
+  --font-editorial: var(--font-cormorant), var(--font-amiri), Georgia, serif;
+  --font-arabic: var(--font-amiri), serif;
+  --color-sand: var(--diwan-sandy);
+  --color-carnelian: var(--diwan-aqeeq);
+  --color-sand-deep: #E4D9C3;
+  --color-gold: #CDA76C;
+  --font-serif: var(--font-amiri), serif;
+  --font-latin: var(--font-cormorant), Georgia, serif;
 }
 
 html {
@@ -69,4 +75,81 @@ html.lenis body {
 ::selection {
   background: var(--diwan-green);
   color: var(--diwan-sandy);
+}
+
+/* ---- DIWAN brand material (catalog, unboxing, brewing, story) ---- */
+.diwan {
+  --font-sans: var(--font-plex), system-ui, sans-serif;
+  --gutter: 16px;
+  --margin: 20px;
+  font-family: var(--font-plex), system-ui, sans-serif;
+  background: var(--diwan-sandy);
+}
+@media (min-width: 768px) { .diwan { --gutter: 20px; --margin: 40px; } }
+@media (min-width: 1280px) { .diwan { --gutter: 24px; --margin: 80px; } }
+
+.diwan bdi, .diwan .num { unicode-bidi: isolate; }
+.diwan .wrap { width: 100%; max-width: 1440px; margin-inline: auto; padding-inline: var(--margin); }
+.diwan .measure { max-width: 68ch; }
+
+/* tissue-paper arch pattern (Sand Deep on Sand) */
+.diwan .arch-pattern {
+  background-color: var(--diwan-sandy);
+  background-image: url("/assets/diwan/Diwan_Arch_Repeat_Tile_512x448.png");
+  background-size: 192px 168px;
+}
+
+/* 3D card flip */
+.diwan .flip-scene { perspective: 1200px; }
+.diwan .flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.diwan .flip-inner.is-flipped { transform: rotateY(180deg); }
+.diwan .flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.diwan .flip-back { transform: rotateY(180deg); }
+
+.diwan .btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 12px 24px; border-radius: 10px;
+  font-weight: 600; cursor: pointer; transition: transform .2s, background .2s;
+  border: 1.5px solid var(--diwan-green);
+}
+.diwan .btn:hover { transform: translateY(-2px); }
+.diwan .btn-primary { background: var(--diwan-green); color: var(--diwan-sandy); }
+.diwan .btn-ghost { background: transparent; color: var(--diwan-green); }
+.diwan .btn-carnelian { background: var(--diwan-aqeeq); color: var(--diwan-sandy); border-color: var(--diwan-aqeeq); }
+.diwan button:focus-visible, .diwan a:focus-visible, .diwan input:focus-visible { outline: 2px solid var(--diwan-aqeeq); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .diwan .flip-inner { transition: none; }
+}
+
+.diwan p.font-latin { margin-bottom: 8px; line-height: 1.4; }
+
+/* the DIWAN arch crowns each section label */
+.diwan p.font-latin::before {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 29px;
+  margin-bottom: 14px;
+  background: url("/assets/diwan/Diwan_Arch_Green_tight.png") center / contain no-repeat;
+}
+.diwan .on-green p.font-latin::before { background-image: url("/assets/diwan/Diwan_Arch_Sand_tight.png"); }
+.diwan .arch-band {
+  height: 56px;
+  background: url("/assets/diwan/Diwan_Arch_Repeat_Tile_512x448.png") center / 192px 168px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%, #000 60%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 40%, #000 60%, transparent);
 }

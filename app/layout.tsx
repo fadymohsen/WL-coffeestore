@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Plus_Jakarta_Sans, Noto_Naskh_Arabic } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans, Noto_Naskh_Arabic, Amiri, IBM_Plex_Sans_Arabic, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import LangSync from "@/components/providers/LangSync";
@@ -25,6 +25,10 @@ const notoArabic = Noto_Naskh_Arabic({
   display: "swap",
 });
 
+const amiri = Amiri({ subsets: ["arabic", "latin"], weight: ["400", "700"], variable: "--font-amiri", display: "swap" });
+const plex = IBM_Plex_Sans_Arabic({ subsets: ["arabic", "latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-plex", display: "swap" });
+const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-cormorant", display: "swap" });
+
 export const metadata: Metadata = {
   title: "DIWAN — قهوة لكل ثقافة",
   description:
@@ -33,7 +37,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable}`}>
+    <html lang="en" dir="ltr" suppressHydrationWarning className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable} ${amiri.variable} ${plex.variable} ${cormorant.variable}`}>
       <body suppressHydrationWarning className="font-sans antialiased">
         <LangSync />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
