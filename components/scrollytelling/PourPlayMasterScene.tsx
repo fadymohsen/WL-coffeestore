@@ -174,10 +174,10 @@ export default function PourPlayMasterScene() {
                 src="/assets/diwan/Diwan_Logo_Colour_tight.png"
                 alt=""
                 aria-hidden="true"
-                className="h-24 w-auto md:h-[clamp(11rem,40vh,22rem)]"
+                className="h-24 w-auto md:h-[clamp(11rem,40vh,22rem)] [@media(max-height:560px)]:h-14"
               />
             </h1>
-            <p className="intro invisible mt-3 self-start font-arabic text-[clamp(1.35rem,6.4vw,1.9rem)] font-bold leading-tight text-aqeeq md:ms-auto md:w-[24vw] md:self-auto md:text-end md:text-[clamp(2rem,4.2vw,4.5rem)]">
+            <p className="intro invisible mt-3 self-start font-arabic [@media(max-height:560px)]:hidden text-[clamp(1.35rem,6.4vw,1.9rem)] font-bold leading-tight text-aqeeq md:ms-auto md:w-[24vw] md:self-auto md:text-end md:text-[clamp(2rem,4.2vw,4.5rem)]">
               {l({ en: "The story begins with a cup", ar: "الحكاية تبدأ بفنجان" })}
             </p>
           </div>
@@ -228,7 +228,7 @@ export default function PourPlayMasterScene() {
               <span>·</span>
               <span>{l(t.hero.coffeeForEveryCulture)}</span>
             </div>
-            <div className="intro invisible pointer-events-auto absolute left-5 right-5 top-[max(37%,17.5rem)] max-w-sm md:bottom-16 md:left-20 md:right-auto md:top-auto">
+            <div className="intro invisible pointer-events-auto absolute left-5 right-5 top-[max(37%,17.5rem)] max-w-sm [@media(max-height:560px)]:top-[11.5rem] md:bottom-16 md:left-20 md:right-auto md:top-auto">
               <p className="mb-5 text-sm leading-relaxed text-n500 md:text-base">
                 {l(t.hero.tagline)}
               </p>
