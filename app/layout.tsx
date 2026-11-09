@@ -3,6 +3,11 @@ import { Playfair_Display, Plus_Jakarta_Sans, Noto_Naskh_Arabic, Amiri, IBM_Plex
 import "./globals.css";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import LangSync from "@/components/providers/LangSync";
+import StoreHydrator from "@/components/providers/StoreHydrator";
+import Toaster from "@/components/ui/Toaster";
+import ConfirmHost from "@/components/ui/ConfirmHost";
+import SkipLink from "@/components/ui/SkipLink";
+import ProgressGate from "@/components/ui/ProgressGate";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -39,8 +44,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable} ${amiri.variable} ${plex.variable} ${cormorant.variable}`}>
       <body suppressHydrationWarning className="font-sans antialiased">
+        <SkipLink />
+        <ProgressGate />
         <LangSync />
+        <StoreHydrator />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        <Toaster />
+        <ConfirmHost />
       </body>
     </html>
   );

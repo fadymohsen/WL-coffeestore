@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Globe, Menu, Search, ShoppingBag, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
+import { Globe, Menu, ShoppingBag, X } from "lucide-react";
 import { scrollToProgress } from "@/components/providers/SmoothScrollProvider";
 import { useShopStore } from "@/store/useShopStore";
+import { useTrap } from "@/lib/useTrap";
 import { useLangStore, useLocalized, translations } from "@/lib/i18n";
 
 const t = translations.nav;
@@ -13,18 +16,24 @@ export default function HeaderNav() {
   const cart = useShopStore((s) => s.cart);
   const setCartOpen = useShopStore((s) => s.setCartOpen);
   const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuTrap = useTrap(() => setMobileOpen(false));
   // once the page reaches the DIWAN sections the header gets its own sand bar so it never sits on green
   const [solid, setSolid] = useState(false);
   useEffect(() => {
     const check = () => {
+      if (pathname !== "/") {
+        setSolid(window.scrollY > 24 || !!document.querySelector("[data-header-solid]"));
+        return;
+      }
       const el = document.querySelector(".diwan");
       setSolid(!!el && el.getBoundingClientRect().top <= 72);
     };
     check();
     window.addEventListener("scroll", check, { passive: true });
     return () => window.removeEventListener("scroll", check);
-  }, []);
+  }, [pathname]);
 
   const lang = useLangStore((s) => s.lang);
   const toggle = useLangStore((s) => s.toggle);
@@ -33,13 +42,14 @@ export default function HeaderNav() {
   const NAV_LINKS = [
     { href: "/shop", label: l(t.shop) },
     { href: "/our-story", label: l(t.ourStory) },
-    { href: "/#catalog", label: l({ en: "The Nine Blends", ar: "التوليفات التسع" }) },
+    { href: "/#blends", label: l({ en: "The Nine Blends", ar: "التوليفات التسع" }) },
     { href: "/#brew", label: l({ en: "Brewing", ar: "التحضير" }) },
+    { href: "/contact", label: l({ en: "Contact", ar: "تواصل معنا" }) },
   ];
 
   return (
     <>
-      <header className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-3 transition-colors duration-300 md:px-12 lg:px-20 ${solid ? "border-b border-n200 bg-sandy/90 backdrop-blur" : ""}`}>
+      <motion.header initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }} className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-3 transition-colors duration-300 md:px-12 lg:px-20 ${solid ? "border-b border-n200 bg-sandy/90 backdrop-blur" : ""}`}>
         {/* Logo */}
         <Link
           href="/"
@@ -50,10 +60,10 @@ export default function HeaderNav() {
             }
           }}
           className="flex items-center"
-          aria-label="DIWAN ديوان"
+          aria-label={l({ en: "DIWAN, home", ar: "ديوان، الرئيسية" })}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/assets/diwan/Diwan_Logo_Colour_tight.png" alt="ديوان" className="h-12 w-auto md:h-14" />
+          <img src="/assets/diwan/Diwan_Logo_Colour_tight.png" alt={l({ en: "DIWAN", ar: "ديوان" })} className="h-12 w-auto md:h-14" />
         </Link>
 
         {/* Desktop Nav */}
@@ -73,43 +83,48 @@ export default function HeaderNav() {
         <div className="flex items-center gap-1 md:gap-3">
           <button
             onClick={toggle}
-            aria-label="Switch language"
+            aria-label={lang === "en" ? "Switch to Arabic" : "التبديل إلى الإنجليزية"}
             className="flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-green transition hover:bg-green/10"
           >
             <Globe className="h-3.5 w-3.5" />
             <span>{lang === "en" ? "عربي" : "EN"}</span>
           </button>
-          <button aria-label={l(t.search)} className="rounded-full p-2 transition hover:bg-green/10">
-            <Search className="h-4 w-4 text-green" />
-          </button>
           <button
+            data-cart-icon
             onClick={() => setCartOpen(true)}
-            aria-label={`Shopping bag, ${totalItems} items`}
-            className="relative rounded-full p-2 transition hover:bg-green/10"
+            aria-label={l({ en: `Shopping bag, ${totalItems} items`, ar: `السلة، ${totalItems} منتجات` })}
+            className="relative rounded-full p-2.5 transition hover:bg-green/10"
           >
             <ShoppingBag className="h-4 w-4 text-green" />
             {totalItems > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-aqeeq text-[10px] font-bold text-sandy">
-                {totalItems}
-              </span>
+              <motion.span
+                key={totalItems}
+                initial={{ scale: 1.6 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 18 }}
+                className="absolute -end-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-aqeeq px-1 text-[10px] font-bold text-sandy"
+              >
+                <bdi>{totalItems}</bdi>
+              </motion.span>
             )}
           </button>
           <button
-            aria-label="Menu"
+            aria-label={l({ en: "Menu", ar: "القائمة" })}
             onClick={() => setMobileOpen(true)}
-            className="rounded-full p-2 transition hover:bg-green/10 md:hidden"
+            className="rounded-full p-2.5 transition hover:bg-green/10 md:hidden"
           >
             <Menu className="h-4 w-4 text-green" />
           </button>
         </div>
-      </header>
+      </motion.header>
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-sandy">
+        <div ref={menuTrap} role="dialog" aria-modal="true" aria-label={l({ en: "Menu", ar: "القائمة" })} className="fixed inset-0 z-50 flex flex-col bg-sandy">
           <div className="flex items-center justify-between px-5 py-4">
-            <span className="font-editorial text-xl font-bold text-green">DIWAN</span>
-            <button onClick={() => setMobileOpen(false)} className="rounded-full p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/diwan/Diwan_Logo_Colour_tight.png" alt={l({ en: "DIWAN", ar: "ديوان" })} className="h-12 w-auto" />
+            <button onClick={() => setMobileOpen(false)} aria-label={l({ en: "Close menu", ar: "إغلاق القائمة" })} className="rounded-full p-2.5">
               <X className="h-5 w-5 text-green" />
             </button>
           </div>

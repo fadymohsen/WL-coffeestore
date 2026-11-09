@@ -1,175 +1,187 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import HeaderNav from "@/components/layout/HeaderNav";
 import CartDrawer from "@/components/layout/CartDrawer";
 import Footer from "@/components/layout/Footer";
-import { COFFEE_CATALOG, CoffeeProduct, useShopStore } from "@/store/useShopStore";
-import { useLocalized, useLangStore, translations } from "@/lib/i18n";
+import Reveal from "@/components/ui/Reveal";
+import { SplitText } from "@/components/ui/motion";
+import { CATEGORY_IDS, CATEGORY_META, type CategoryId } from "@/data/products";
+import AddToBagButton from "@/components/shop/AddToBagButton";
+import { inStock, isLive, isLow, lineKey, useCatalogStore, type CatalogItem } from "@/store/useCatalogStore";
+import { useLangStore, useLocalized } from "@/lib/i18n";
+import { money } from "@/lib/format";
 
-const t = translations.shopPage;
-const tp = translations.product;
+type Filter = "all" | CategoryId;
 
-const FILTERS = [
-  { key: "all", label: t.filters.all },
-  { key: "BLEND", label: t.filters.blend },
-  { key: "SPECIALTY", label: t.filters.specialty },
-  { key: "TURKISH", label: t.filters.turkish },
-] as const;
-
-function ProductCard({ product }: { product: CoffeeProduct }) {
-  const qty = useShopStore((s) => s.cart[product.id] || 0);
-  const isLiked = useShopStore((s) => !!s.wishlist[product.id]);
-  const addToCart = useShopStore((s) => s.addToCart);
-  const toggleWishlist = useShopStore((s) => s.toggleWishlist);
-  const l = useLocalized();
+function ShopCard({ item }: { item: CatalogItem }) {
   const lang = useLangStore((s) => s.lang);
-
-  const title = lang === "en" ? product.title : product.titleAr;
-  const subtitle = lang === "en" ? product.titleAr : product.title;
-  const region = lang === "en" ? product.regionEn : product.region;
-  const notes = lang === "en" ? product.tastingNotesEn : product.tastingNotes;
-  const desc = lang === "en" ? product.descriptionEn : product.description;
+  const l = useLocalized();
+  const [variantKey, setVariantKey] = useState(item.variants[0].key);
+  const variant = item.variants.find((v) => v.key === variantKey) ?? item.variants[0];
+  const available = inStock(variant);
+  const multi = item.variants.length > 1;
 
   return (
-    <div className="group rounded-[14px] border border-n200 bg-n100 p-5 transition hover:shadow-lg">
-      {/* Bag Visual */}
-      <div className="relative mb-4 flex h-40 items-center justify-center overflow-hidden rounded-[10px] bg-n200/50">
-        <div
-          className="flex h-28 w-20 flex-col items-center justify-between rounded-lg border border-white/30 p-2 shadow-lg transition group-hover:scale-105"
-          style={{ backgroundColor: product.bagColor }}
-        >
-          <div className="h-1.5 w-full rounded-full bg-black/15" />
-          <div className="rounded bg-sandy px-1.5 py-1 text-center">
-            <div className="text-[8px] font-bold uppercase tracking-wider text-green">DIWAN</div>
-            <div className="text-[6px] font-normal text-green/60">{product.categoryEn}</div>
+    <article className="group flex h-full flex-col overflow-hidden rounded-[14px] border border-n200 bg-n100 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-16px_rgba(14,58,51,0.25)]">
+      <Link href={`/shop/${item.id}`} className="relative block aspect-square overflow-hidden bg-n200" aria-label={item.name[lang]}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={item.image}
+          alt={l({ en: `${item.name.en}, 200 g pack with its card`, ar: `${item.name.ar}، عبوة 200 جم مع كارتها` })}
+          loading="lazy"
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+        />
+        <span className="absolute start-3 top-3 rounded-[6px] bg-sandy/90 px-2.5 py-1 text-[11px] font-semibold text-green backdrop-blur">
+          {CATEGORY_META[item.categoryId].label[lang]}
+        </span>
+      </Link>
+
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="font-editorial text-2xl font-semibold text-green"><Link href={`/shop/${item.id}`} className="hover:underline">{item.name[lang]}</Link></h3>
+        <p className="mt-1 text-sm leading-relaxed text-n500">{item.description[lang]}</p>
+
+        {multi && (
+          <div className="mt-4 flex flex-wrap gap-1.5" role="radiogroup" aria-label={l({ en: "Roast and style", ar: "التحميص والحالة" })}>
+            {item.variants.map((v) => (
+              <button
+                key={v.key}
+                role="radio"
+                aria-checked={v.key === variantKey}
+                onClick={() => setVariantKey(v.key)}
+                className={`rounded-lg border px-3 py-2 text-xs font-medium transition active:scale-[0.97] ${v.key === variantKey ? "border-green bg-green text-sandy" : "border-n300 text-n500 hover:border-green hover:text-green"}`}
+              >
+                {v.label[lang]}
+              </button>
+            ))}
           </div>
-          <span className="text-[9px] font-semibold text-white/90">{product.weight}</span>
+        )}
+
+        <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+          <div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-bold text-green"><bdi>{money(variant.price, lang)}</bdi></span>
+              {variant.compareAt && variant.compareAt > variant.price && <span className="text-xs text-n400 line-through"><bdi>{money(variant.compareAt, lang)}</bdi></span>}
+            </div>
+            <div className="text-[11px] text-n400">
+              {isLow(variant) ? <span className="font-medium text-[#9A6B12]">{l({ en: `${variant.stock} left`, ar: `متبقي ${variant.stock}` })}</span> : l({ en: "200 g pack", ar: "عبوة 200 جم" })}
+            </div>
+          </div>
+          <AddToBagButton lineKey={lineKey(item.id, variant.key)} disabled={!available} flyImage={item.image} size="sm" />
         </div>
-        <button
-          onClick={() => toggleWishlist(product.id)}
-          className="absolute right-3 top-3 rounded-full bg-sandy/80 p-2 opacity-0 transition group-hover:opacity-100"
-        >
-          <Heart
-            className={`h-4 w-4 ${isLiked ? "fill-aqeeq text-aqeeq" : "text-n400"}`}
-          />
-        </button>
       </div>
-
-      {/* Info */}
-      <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-green/50">
-        {product.categoryEn}
-      </span>
-      <h3 className="mt-1 font-editorial text-xl font-bold text-green">{title}</h3>
-      <p className="text-sm text-n400">{subtitle}</p>
-      <p className="mt-1 text-xs text-n400">{region}</p>
-
-      {/* Tasting Notes */}
-      <div className="mt-3 flex flex-wrap gap-1">
-        {notes.map((note) => (
-          <span
-            key={note}
-            className="rounded-md bg-green/8 px-2 py-0.5 text-[10px] font-medium text-green"
-          >
-            {note}
-          </span>
-        ))}
-      </div>
-
-      {/* Description */}
-      <p className="mt-3 text-xs leading-relaxed text-n400">
-        {desc}
-      </p>
-
-      {/* Price + Add */}
-      <div className="mt-4 flex items-center justify-between">
-        <span className="text-lg font-bold text-green">{product.price} EGP</span>
-        <button
-          onClick={() => addToCart(product.id)}
-          className="flex items-center gap-1.5 rounded-full bg-green px-4 py-2 text-xs font-semibold text-sandy transition hover:bg-green/90"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          <span>{qty > 0 ? `${l(tp.inBag)} (${qty})` : l(tp.add)}</span>
-        </button>
-      </div>
-    </div>
+    </article>
   );
 }
 
 export default function ShopPage() {
-  const [filter, setFilter] = useState<string>("all");
+  const lang = useLangStore((s) => s.lang);
   const l = useLocalized();
+  const items = useCatalogStore((s) => s.items).filter(isLive);
+  const [filter, setFilter] = useState<Filter>("all");
+  const [sort, setSort] = useState<"featured" | "low" | "high">("featured");
+  const [q, setQ] = useState("");
 
-  const filtered =
-    filter === "all"
-      ? COFFEE_CATALOG
-      : COFFEE_CATALOG.filter((p) => p.categoryEn === filter);
+  useEffect(() => {
+    const c = new URLSearchParams(window.location.search).get("category");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (c && (CATEGORY_IDS as string[]).includes(c)) setFilter(c as CategoryId);
+  }, []);
+
+  const needle = q.trim().toLowerCase();
+  const base = (filter === "all" ? items : items.filter((i) => i.categoryId === filter)).filter((i) => !needle || i.name.en.toLowerCase().includes(needle) || i.name.ar.includes(needle));
+  const minPrice = (i: CatalogItem) => Math.min(...i.variants.map((v) => v.price));
+  const filtered = sort === "featured" ? base : [...base].sort((a, b) => (sort === "low" ? minPrice(a) - minPrice(b) : minPrice(b) - minPrice(a)));
+  const filters: Filter[] = ["all", ...CATEGORY_IDS];
 
   return (
-    <main className="relative">
+    <main id="main" className="page-in relative">
       <HeaderNav />
       <CartDrawer />
 
-      {/* Hero */}
-      <section className="flex flex-col items-center px-5 pb-8 pt-28 text-center md:px-20 md:pt-32">
-        <span className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-green/50">
-          {l(t.title)}
-        </span>
-        <h1 className="font-editorial text-4xl font-bold text-green md:text-6xl">
-          {l(t.title)}
-        </h1>
-        <p className="mt-3 max-w-md text-sm text-n400">
-          {l(t.subtitle)}
-        </p>
-      </section>
+      <section className="mx-auto max-w-[1440px] px-5 pb-10 pt-32 md:px-20 md:pt-40">
+        <Reveal>
+          <SplitText as="h1" text={l({ en: "Shop", ar: "المتجر" })} className="block font-editorial text-5xl font-semibold text-green md:text-7xl" />
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-n500">
+            {l({
+              en: "Nine blends in three categories. Every pack is 200 g, and every price is in Egyptian pounds.",
+              ar: "تسع توليفات في ثلاث فئات. كل عبوة 200 جم، وكل الأسعار بالجنيه المصري.",
+            })}
+          </p>
+        </Reveal>
 
-      {/* Filters */}
-      <section className="mx-auto max-w-[1440px] px-5 md:px-20">
-        <div className="flex flex-wrap items-center gap-2">
-          {FILTERS.map((f) => (
+        <div className="mt-8 flex flex-wrap gap-2" role="tablist">
+          {filters.map((f) => (
             <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
-                filter === f.key
-                  ? "bg-green text-sandy"
-                  : "border border-n200 text-n500 hover:bg-green/10"
-              }`}
+              key={f}
+              role="tab"
+              aria-selected={filter === f}
+              onClick={() => setFilter(f)}
+              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition active:scale-[0.97] ${filter === f ? "bg-green text-sandy" : "border border-n300 text-n500 hover:border-green hover:text-green"}`}
             >
-              {l(f.label)}
+              {f === "all" ? l({ en: "All", ar: "الكل" }) : CATEGORY_META[f].label[lang]}
             </button>
           ))}
         </div>
+        <div className="mt-6 flex items-center justify-between gap-4 border-t border-n200 pt-4 text-sm text-n500">
+          <div className="flex flex-1 items-center gap-4">
+            <input
+              type="search"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder={l({ en: "Search blends", ar: "ابحث عن توليفة" })}
+              aria-label={l({ en: "Search blends", ar: "ابحث عن توليفة" })}
+              className="w-full max-w-xs rounded-xl border border-n300 bg-n100 px-4 py-2.5 text-sm text-ink outline-none transition focus:border-green focus:ring-2 focus:ring-green/20"
+            />
+            <span aria-live="polite" className="whitespace-nowrap"><bdi>{filtered.length}</bdi> {l({ en: "products", ar: "منتجات" })}</span>
+          </div>
+          <label className="flex items-center gap-2">
+            {l({ en: "Sort", ar: "الترتيب" })}
+            <select value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} className="rounded-lg border border-n300 bg-n100 px-3 py-2 text-sm text-ink outline-none focus:border-green">
+              <option value="featured">{l({ en: "Featured", ar: "المميّز" })}</option>
+              <option value="low">{l({ en: "Price: low to high", ar: "السعر: الأقل أولاً" })}</option>
+              <option value="high">{l({ en: "Price: high to low", ar: "السعر: الأعلى أولاً" })}</option>
+            </select>
+          </label>
+        </div>
       </section>
 
-      {/* Product Grid */}
-      <section className="mx-auto max-w-[1440px] px-5 py-10 md:px-20">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+      <section className="mx-auto max-w-[1440px] px-5 pb-20 md:px-20">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((item, i) => (
+            <Reveal key={item.id} delay={(i % 3) * 0.07}>
+              <ShopCard item={item} />
+            </Reveal>
           ))}
         </div>
         {filtered.length === 0 && (
-          <p className="py-20 text-center text-sm text-n400">
-            {l(t.noProducts)}
-          </p>
+          <div className="py-20 text-center">
+            <p className="text-sm text-n500">{needle ? l({ en: "No blend matches your search.", ar: "لا توجد توليفة تطابق بحثك." }) : l({ en: "No products in this category yet.", ar: "لا توجد منتجات في هذا التصنيف حالياً." })}</p>
+            {(needle || filter !== "all") && <button onClick={() => { setQ(""); setFilter("all"); }} className="btn btn-ghost mt-4">{l({ en: "Clear filters", ar: "مسح التصفية" })}</button>}
+          </div>
         )}
       </section>
 
-      {/* Gifting Banner */}
-      <section className="mx-auto max-w-[1440px] px-5 pb-16 md:px-20">
-        <div className="flex flex-col items-center gap-4 rounded-[14px] bg-green p-10 text-center md:p-16">
-          <span className="text-xs font-bold uppercase tracking-[0.22em] text-sandy/50">
-            {l(t.giftingLabel)}
-          </span>
-          <h2 className="font-editorial text-3xl font-bold text-sandy md:text-4xl">
-            {l(t.giftingTitle)}
-          </h2>
-          <p className="max-w-md text-sm leading-relaxed text-sandy/70">
-            {l(t.giftingDesc)}
-          </p>
-        </div>
+      <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-20">
+        <Reveal>
+          <div className="grid overflow-hidden rounded-[14px] bg-green text-sandy md:grid-cols-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/diwan/photo/unboxing-flatlay.webp" alt={l({ en: "The DIWAN box, opened", ar: "بوكس ديوان مفتوح" })} loading="lazy" className="h-64 w-full object-cover md:h-full" />
+            <div className="flex flex-col justify-center gap-4 p-8 md:p-12">
+              <h2 className="font-editorial text-3xl font-semibold md:text-4xl">{l({ en: "Every order opens like a story", ar: "كل طلب يصلك في بوكس" })}</h2>
+              <p className="text-sm leading-relaxed text-sandy/80">
+                {l({
+                  en: "A sealed box, tissue paper with a wax seal, the card for your blend and the white pouch.",
+                  ar: "بوكس بختم، وورق زبدة بختم شمعي، وكارت توليفتك، والكيس الأبيض.",
+                })}
+              </p>
+              <Link href="/#unboxing" className="inline-flex w-fit items-center rounded-full border border-sandy/60 px-6 py-3 text-xs font-bold uppercase tracking-widest transition hover:bg-sandy hover:text-green active:scale-[0.97]">
+                {l({ en: "See the unboxing", ar: "شاهد فتح البوكس" })}
+              </Link>
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       <Footer />

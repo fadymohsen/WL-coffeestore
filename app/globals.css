@@ -11,7 +11,7 @@
   --n-100: #F7F4ED;
   --n-200: #E4DFD3;
   --n-300: #BDB5A6;
-  --n-400: #8A8172;
+  --n-400: #6B6355;
   --n-500: #4A463F;
 
   /* Functional (UI only) */
@@ -119,17 +119,17 @@ html.lenis body {
 }
 .diwan .flip-back { transform: rotateY(180deg); }
 
-.diwan .btn {
+.btn {
   display: inline-flex; align-items: center; justify-content: center;
-  gap: 8px; padding: 12px 24px; border-radius: 10px;
+  gap: 8px; padding: 12px 24px; border-radius: 9999px;
   font-weight: 600; cursor: pointer; transition: transform .2s, background .2s;
   border: 1.5px solid var(--diwan-green);
 }
-.diwan .btn:hover { transform: translateY(-2px); }
-.diwan .btn-primary { background: var(--diwan-green); color: var(--diwan-sandy); }
-.diwan .btn-ghost { background: transparent; color: var(--diwan-green); }
-.diwan .btn-carnelian { background: var(--diwan-aqeeq); color: var(--diwan-sandy); border-color: var(--diwan-aqeeq); }
-.diwan button:focus-visible, .diwan a:focus-visible, .diwan input:focus-visible { outline: 2px solid var(--diwan-aqeeq); outline-offset: 2px; }
+.btn:hover { transform: translateY(-2px); }
+.btn-primary { background: var(--diwan-green); color: var(--diwan-sandy); }
+.btn-ghost { background: transparent; color: var(--diwan-green); }
+.btn-carnelian { background: var(--diwan-aqeeq); color: var(--diwan-sandy); border-color: var(--diwan-aqeeq); }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--diwan-aqeeq); outline-offset: 2px; box-shadow: 0 0 0 5px rgba(244, 236, 220, 0.9); }
 
 @media (prefers-reduced-motion: reduce) {
   .diwan .flip-inner { transition: none; }
@@ -153,3 +153,26 @@ html.lenis body {
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%, #000 60%, transparent);
   mask-image: linear-gradient(to bottom, transparent, #000 40%, #000 60%, transparent);
 }
+
+.btn:active { transform: translateY(0) scale(0.98); }
+.btn-primary:hover { background: #0b2f29; }
+.btn:disabled { cursor: not-allowed; transform: none; }
+
+/* page load: a short fade and lift */
+/* opacity only: a transform here would make this element the containing block of the fixed drawers inside it */
+@keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+.page-in { animation: page-in 0.5s ease-out backwards; }
+@media (prefers-reduced-motion: reduce) { .page-in { animation: none; } }
+
+/* Latin small-caps labels read badly with tracking once the text is Arabic */
+html[lang="ar"] .font-latin { letter-spacing: 0 !important; font-family: var(--font-plex), system-ui, sans-serif; }
+html[lang="en"] .diwan .font-serif { font-family: var(--font-cormorant), var(--font-amiri), serif; font-weight: 600; }
+
+/* slow ribbon of words */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { width: max-content; animation: marquee 46s linear infinite; }
+html[dir="rtl"] .marquee-track { animation-direction: reverse; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* soft pulse used by the add-to-bag flight target */
+@keyframes bag-bump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }

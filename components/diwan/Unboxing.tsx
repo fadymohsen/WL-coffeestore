@@ -6,36 +6,53 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { PRODUCTS } from "@/data/products";
 import ProductCard from "./ProductCard";
+import { useLangStore } from "@/lib/i18n";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const PHOTO = "/assets/diwan/photo";
 
-const STAGES = [
+interface Bi { ar: string; en: string }
+const STAGES: { t: Bi; d: Bi; chips: Bi[] }[] = [
   {
-    t: "البوكس وقفل «افتح الحكاية»",
-    d: "علبة كرتون مطوي بغطاء مفصلي، يقفلها استيكر أخضر يمتد من الواجهة إلى القاعدة. أول ما تفتحه، تبدأ الحكاية.",
-    chips: ["19 × 15 × 3.75 سم", "استيكر 4 × 6 سم"],
+    t: { ar: "البوكس وقفل «افتح الحكاية»", en: "The box and its “Open the Story” seal" },
+    d: {
+      ar: "علبة كرتون مطوية بغطاء مفصلي، يغلقها استيكر أخضر من الواجهة إلى القاعدة. عندما تفتحه تبدأ الحكاية.",
+      en: "A folding carton with a hinged lid, closed by a green sticker running from the front to the base. The moment you open it, the story begins.",
+    },
+    chips: [{ ar: "19 × 15 × 3.75 سم", en: "19 × 15 × 3.75 cm" }, { ar: "استيكر 4 × 6 سم", en: "4 × 6 cm sticker" }],
   },
   {
-    t: "الحكاية داخل الغطاء",
-    d: "بذرة، زراعة وقطف، تجفيف وتحميص وطحن. ثم يتفرع الخط إلى ثلاث طرق تحضير تلتقي في الفنجان، وحوله مجلس.",
-    chips: ["V60", "إسبريسو", "تركي"],
+    t: { ar: "الحكاية داخل الغطاء", en: "The story inside the lid" },
+    d: {
+      ar: "رسم خطي يبدأ من البذرة والقطف ويمر بالتحميص والطحن، ثم تتفرع ثلاث طرق للتحضير تلتقي في فنجان واحد حول مجلس.",
+      en: "A seed, planting and picking, drying, roasting and grinding. Then the line splits into three brewing methods that meet in the cup, with a gathering around it.",
+    },
+    chips: [{ ar: "V60", en: "V60" }, { ar: "إسبريسو", en: "Espresso" }, { ar: "تركي", en: "Turkish" }],
   },
   {
-    t: "ورق الزبدة والختم الشمعي",
-    d: "ورقة بنقشة القوس تلف الكارت والكيس، وختم شمعي عقيقي يحمل شعار ديوان. افتح الختم وانتبه للتفاصيل.",
-    chips: ["ورق 30 × 40 سم", "ختم عقيقي"],
+    t: { ar: "ورق الزبدة والختم الشمعي", en: "Tissue paper and the wax seal" },
+    d: {
+      ar: "ورق بنقشة القوس يلف الكارت والكيس، ويغلقه ختم شمعي عقيقي عليه شعار ديوان. اكسر الختم وافتح الورق.",
+      en: "A sheet printed with the arch pattern wraps the card and the pouch, closed with a carnelian wax seal bearing the DIWAN mark. Break the seal and notice the details.",
+    },
+    chips: [{ ar: "ورق 30 × 40 سم", en: "30 × 40 cm paper" }, { ar: "ختم عقيقي", en: "Carnelian seal" }],
   },
   {
-    t: "كارت التوليفة",
-    d: "كارت بوجهين: الوش لاسم التوليفة ودرجتها، والظهر لوصفة «حضّرها على ذوقك» خطوة بخطوة.",
-    chips: ["9 × 12 سم", "18 وجهاً"],
+    t: { ar: "كارت التوليفة", en: "The blend card" },
+    d: {
+      ar: "كارت بوجهين: الوش باسم التوليفة ودرجتها، والظهر بوصفة «حضّرها على ذوقك» خطوة بخطوة.",
+      en: "A double-sided card: the front names the blend and its roast, the back holds the “Brew it your way” recipe, step by step.",
+    },
+    chips: [{ ar: "9 × 12 سم", en: "9 × 12 cm" }, { ar: "18 وجهاً", en: "18 sides" }],
   },
   {
-    t: "الكيس الأبيض",
-    d: "كيس أبيض بملمس هادئ وسوستة إغلاق، بلا فالف، عليه استيكر شفاف بشعار ديوان. 200 جم من القهوة تنتظرك.",
-    chips: ["200 جم", "19 × 14 سم"],
+    t: { ar: "الكيس الأبيض", en: "The white pouch" },
+    d: {
+      ar: "كيس أبيض بسوستة وبدون فالف، عليه استيكر شفاف بشعار ديوان، وبداخله 200 جم من القهوة.",
+      en: "A white pouch with a calm texture and a zip, no valve, with a clear DIWAN sticker. 200 g of coffee is waiting.",
+    },
+    chips: [{ ar: "200 جم", en: "200 g" }, { ar: "19 × 14 سم", en: "19 × 14 cm" }],
   },
 ];
 
@@ -49,6 +66,8 @@ const cam = (fx: number, fy: number, s: number) => ({
 export default function Unboxing() {
   const root = useRef<HTMLElement>(null);
   const ons = PRODUCTS[0];
+  const lang = useLangStore((s) => s.lang);
+  const ar = lang === "ar";
 
   useGSAP(
     () => {
@@ -118,7 +137,7 @@ export default function Unboxing() {
       ref={root}
       id="unboxing"
       className="on-green relative h-svh overflow-hidden bg-green text-sand"
-      aria-label="افتح الحكاية، تجربة الأنبوكسنج"
+      aria-label={ar ? "افتح الحكاية، فتح البوكس خطوة بخطوة" : "Open the Story, the unboxing experience"}
     >
       <style>{`.u-card .flip-inner{transition:none}`}</style>
       <div className="wrap grid h-full grid-rows-[auto_1fr] gap-4 pb-6 pt-20 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:grid-rows-1 md:items-center md:gap-12 md:py-16">
@@ -128,20 +147,20 @@ export default function Unboxing() {
             <div className="u-tick-fill absolute inset-x-0 top-0 h-full origin-top scale-y-[0.2] bg-gold" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-latin text-xs tracking-[0.3em] text-gold md:text-sm">UNBOXING</p>
-            <h2 className="font-serif text-3xl font-bold leading-tight md:text-5xl">افتح الحكاية</h2>
+            <p className="font-latin text-xs tracking-[0.3em] text-gold md:text-sm">{ar ? "فتح البوكس" : "UNBOXING"}</p>
+            <h2 className="font-serif text-3xl font-bold leading-tight md:text-5xl">{ar ? "افتح الحكاية" : "Open the Story"}</h2>
             <div className="mt-4 grid md:mt-8">
               {STAGES.map((s, i) => (
-                <article key={s.t} className={`u-cap u-cap-${i} col-start-1 row-start-1`}>
+                <article key={s.t.en} className={`u-cap u-cap-${i} col-start-1 row-start-1`}>
                   <p className="font-latin text-sm text-gold">
                     <bdi>{`0${i + 1} / 05`}</bdi>
                   </p>
-                  <h3 className="mt-1 font-serif text-xl font-bold md:mt-2 md:text-3xl">{s.t}</h3>
-                  <p className="measure mt-2 text-sm leading-relaxed text-sand/85 md:mt-3 md:text-base">{s.d}</p>
+                  <h3 className="mt-1 font-serif text-xl font-bold md:mt-2 md:text-3xl">{s.t[lang]}</h3>
+                  <p className="measure mt-2 text-sm leading-relaxed text-sand/85 md:mt-3 md:text-base">{s.d[lang]}</p>
                   <ul className="mt-3 flex flex-wrap gap-2 md:mt-5">
                     {s.chips.map((c) => (
-                      <li key={c} className="rounded-[6px] border border-sand/30 px-3 py-1 text-xs font-medium text-sand">
-                        <bdi>{c}</bdi>
+                      <li key={c.en} className="rounded-[6px] border border-sand/30 px-3 py-1 text-xs font-medium text-sand">
+                        <bdi>{c[lang]}</bdi>
                       </li>
                     ))}
                   </ul>
@@ -156,25 +175,25 @@ export default function Unboxing() {
           {/* eslint-disable @next/next/no-img-element */}
           <img
             src={`${PHOTO}/unboxing-flatlay.webp`}
-            alt="كيس ديوان وكارت وورق زبدة بختم شمعي داخل البوكس"
+            alt={ar ? "كيس ديوان وكارت وورق زبدة بختم شمعي داخل البوكس" : "A DIWAN pouch, a card and tissue paper with a wax seal inside the box"}
             className="u-flat absolute inset-0 h-full w-full object-cover"
           />
           <div className="u-street absolute inset-0">
             <img
               src={`${PHOTO}/cafe-street-box.webp`}
-              alt="واجهة بوكس ديوان: مشهد مقهى في شارع قاهري"
+              alt={ar ? "واجهة بوكس ديوان: مشهد مقهى في شارع قاهري" : "The DIWAN box front: a café scene on a Cairo street"}
               className="h-full w-full object-cover"
             />
             <img
               src={`${PHOTO}/seal-sticker.webp`}
-              alt="استيكر قفل البوكس: افتح الحكاية"
+              alt={ar ? "استيكر قفل البوكس: افتح الحكاية" : "The box seal sticker: Open the Story"}
               className="u-seal absolute bottom-[-4%] left-1/2 w-[20%] -translate-x-1/2 rounded-[6px] shadow-[0_12px_32px_rgba(0,0,0,.4)]"
             />
           </div>
           <div className="u-lid absolute inset-0 bg-green">
             <img
               src={`${PHOTO}/lid-story.webp`}
-              alt="رسم الحكاية داخل الغطاء: من البذرة إلى الفنجان، وثلاثة أصدقاء في مجلس"
+              alt={ar ? "رسم الحكاية داخل الغطاء: من البذرة إلى الفنجان، وثلاثة أصدقاء في مجلس" : "The lid illustration: from seed to cup, and three friends in a majlis"}
               className="u-lid-img h-full w-full object-contain"
             />
           </div>

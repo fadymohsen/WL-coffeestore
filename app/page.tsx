@@ -6,7 +6,7 @@ import PourPlayMasterScene from "@/components/scrollytelling/PourPlayMasterScene
 
 export default function HomePage() {
   return (
-    <main id="top" className="relative">
+    <main id="main" className="relative">
       <HeaderNav />
       <PourPlayMasterScene />
       <DiwanSections />

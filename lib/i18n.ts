@@ -30,7 +30,6 @@ export const translations = {
     shop: { en: "Shop", ar: "المتجر" },
     ourStory: { en: "Our Story", ar: "حكايتنا" },
     home: { en: "Home", ar: "الرئيسية" },
-    search: { en: "Search", ar: "بحث" },
   },
   hero: {
     tagline: {
@@ -39,34 +38,34 @@ export const translations = {
     },
     shopNow: { en: "Shop Now", ar: "تسوّق الآن" },
     coffeeForEveryCulture: { en: "Coffee for Every Culture", ar: "قهوة لكل ثقافة" },
-    scroll: { en: "Scroll", ar: "مرّر" },
+    scroll: { en: "Scroll", ar: "مرّر للأسفل" },
   },
   grind: {
     text: {
       en: "Fresh grinding preserves the bean's flavor as it is. No complications.",
       ar: "طحن طازج يحافظ على نكهة الحبة كما هي. بدون تعقيد.",
     },
-    cta: { en: "Discover the Pour", ar: "اكتشف الصبّة" },
+    cta: { en: "Discover the Pour", ar: "شاهد الصبّة" },
   },
   pour: {
     label: { en: "Second Ritual — The Pour", ar: "الطقس الثاني · الصبّة" },
     text: {
       en: "Hot water poured gently over coffee. Each pour reveals a different flavor. The simplicity of preparation is part of the joy.",
-      ar: "مياه ساخنة على القهوة بهدوء. كل صبّة تكشف طعم مختلف. بساطة التحضير هي جزء من المتعة.",
+      ar: "ماء ساخن يُصبّ على القهوة بهدوء، وكل صبّة تُظهر طعماً مختلفاً.",
     },
     recipe: { en: "Brewing Method", ar: "طريقة التحضير" },
     hide: { en: "Hide", ar: "إخفاء" },
-    step1: { en: "1. 15g medium-ground coffee, rinse the filter.", ar: "١. ١٥ جرام قهوة مطحونة متوسطة، اغسل الفلتر." },
-    step2: { en: "2. Wet the coffee with 45g water, wait 30 seconds.", ar: "٢. بلل القهوة بـ ٤٥ جرام مياه، انتظر ٣٠ ثانية." },
-    step3: { en: "3. Pour in a circular motion up to 240g.", ar: "٣. صبّ بحركة دائرية لحد ٢٤٠ جرام." },
-    step4: { en: "4. Filtration finishes in about 2 minutes and 45 seconds.", ar: "٤. التصفية تخلص في حوالي دقيقتين و٤٥ ثانية." },
+    step1: { en: "1. 15g medium-ground coffee, rinse the filter.", ar: "1. 15 جراماً من القهوة المطحونة متوسطاً، واغسل الفلتر." },
+    step2: { en: "2. Wet the coffee with 45g water, wait 30 seconds.", ar: "2. بلّل القهوة بـ 45 جراماً من الماء وانتظر 30 ثانية." },
+    step3: { en: "3. Pour in a circular motion up to 240g.", ar: "3. اسكب الماء بحركة دائرية حتى 240 جراماً." },
+    step4: { en: "4. Filtration finishes in about 2 minutes and 45 seconds.", ar: "4. تنتهي التصفية خلال دقيقتين و45 ثانية تقريباً." },
   },
   sip: {
     label: { en: "Third Ritual — The Sip", ar: "الطقس الثالث · الرشفة" },
   },
   shopScene: {
-    choose: { en: "Choose\nYour Cup", ar: "اختار\nفنجانك" },
-    findYourCup: { en: "Find Your Cup", ar: "اختار فنجانك" },
+    choose: { en: "Choose\nYour Cup", ar: "اختر\nفنجانك" },
+    findYourCup: { en: "Find Your Cup", ar: "اختر فنجانك" },
     shop: { en: "Shop", ar: "تسوّق" },
     backToTop: { en: "Back to Top", ar: "العودة للأعلى" },
   },
@@ -74,17 +73,17 @@ export const translations = {
   pourWord: { en: "Pour", ar: "صبّة" },
   sipWord: { en: "Sip", ar: "رشفة" },
   cart: {
-    yourBag: { en: "Your Bag", ar: "حقيبتك" },
-    closeBag: { en: "Close bag", ar: "إغلاق الحقيبة" },
-    emptyBag: { en: "Your bag is empty", ar: "الحقيبة فاضية" },
+    yourBag: { en: "Your Bag", ar: "سلتك" },
+    closeBag: { en: "Close bag", ar: "إغلاق السلة" },
+    emptyBag: { en: "Your bag is empty", ar: "السلة فارغة" },
     total: { en: "Total", ar: "الإجمالي" },
     checkout: { en: "Checkout", ar: "إتمام الطلب" },
   },
   product: {
-    addToBag: { en: "Add to Bag", ar: "أضف للحقيبة" },
+    addToBag: { en: "Add to Bag", ar: "أضف للسلة" },
     add: { en: "Add", ar: "أضف" },
-    inBag: { en: "In Bag", ar: "في الحقيبة" },
-    bag: { en: "Bag", ar: "الحقيبة" },
+    inBag: { en: "In Bag", ar: "في السلة" },
+    bag: { en: "Bag", ar: "السلة" },
   },
   footer: {
     brandDesc: {

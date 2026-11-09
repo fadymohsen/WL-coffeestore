@@ -6,9 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight, ChevronDown, Compass, RotateCcw } from "lucide-react";
 import ScrollVideoScenes, { type ScrollVideoScenesHandle } from "./ScrollVideoScenes";
-import TiltProductCard from "@/components/ui/TiltProductCard";
+import CategoryCard from "@/components/ui/CategoryCard";
 import { scrollToY, setScrollLocked } from "@/components/providers/SmoothScrollProvider";
-import { COFFEE_CATALOG, useShopStore } from "@/store/useShopStore";
+import { useShopStore } from "@/store/useShopStore";
 import { useLocalized, translations } from "@/lib/i18n";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -105,6 +105,7 @@ export default function PourPlayMasterScene() {
         gsap.to(".intro-hint", { autoAlpha: 1, duration: 0.6 });
       };
 
+      let removeSkip = () => {};
       const skip = reduced || window.scrollY > 24;
       gsap.set(".intro", { autoAlpha: 0, y: 36 });
       if (skip) {
@@ -115,6 +116,16 @@ export default function PourPlayMasterScene() {
       } else {
         window.scrollTo(0, 0);
         setScrollLocked(true, "intro");
+        // anyone who tries to scroll, tap or press a key can skip the opening
+        const skipIntro = () => finishIntro();
+        window.addEventListener("wheel", skipIntro, { once: true, passive: true });
+        window.addEventListener("touchstart", skipIntro, { once: true, passive: true });
+        window.addEventListener("keydown", skipIntro, { once: true });
+        removeSkip = () => {
+          window.removeEventListener("wheel", skipIntro);
+          window.removeEventListener("touchstart", skipIntro);
+          window.removeEventListener("keydown", skipIntro);
+        };
         introEnded.current = finishIntro;
         startIntro.current = () => {
           if (introStarted.current) return;
@@ -128,6 +139,7 @@ export default function PourPlayMasterScene() {
       if (videoReady.current) startIntro.current();
 
       return () => {
+        removeSkip();
         setScrollLocked(false, "intro");
       };
     },
@@ -154,9 +166,9 @@ export default function PourPlayMasterScene() {
       <div className="sticky top-0 isolate h-screen w-full overflow-hidden bg-n100 md:bg-white">
         {/* LAYER 0: Display type behind the video */}
         <div className="absolute inset-0 z-0">
-          <div className="s1 absolute inset-x-0 top-[10%] flex flex-col items-start px-5 md:top-[24%] md:flex-row md:items-baseline md:justify-between md:px-20">
+          <div className="s1 absolute inset-x-0 top-[max(10%,6rem)] flex flex-col items-start px-5 md:top-[24%] md:flex-row md:items-baseline md:justify-between md:px-20">
             <h1 className="intro invisible">
-              <span className="sr-only">DIWAN ديوان</span>
+              <span className="sr-only">{l({ en: "DIWAN", ar: "ديوان" })}</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/assets/diwan/Diwan_Logo_Colour_tight.png"
@@ -165,12 +177,12 @@ export default function PourPlayMasterScene() {
                 className="h-24 w-auto md:h-[clamp(11rem,40vh,22rem)]"
               />
             </h1>
-            <p className="intro invisible self-end font-arabic text-[clamp(2rem,9vw,3rem)] font-bold leading-tight text-aqeeq md:self-auto md:text-[clamp(2rem,4.2vw,4.5rem)]">
-              الحكاية تبدأ بفنجان
+            <p className="intro invisible mt-3 self-start font-arabic text-[clamp(1.35rem,6.4vw,1.9rem)] font-bold leading-tight text-aqeeq md:ms-auto md:w-[24vw] md:self-auto md:text-end md:text-[clamp(2rem,4.2vw,4.5rem)]">
+              {l({ en: "The story begins with a cup", ar: "الحكاية تبدأ بفنجان" })}
             </p>
           </div>
 
-          <div className="s2a invisible absolute inset-x-0 top-[10%] overflow-hidden md:top-[30%]">
+          <div className="s2a invisible absolute inset-x-0 top-[max(10%,6rem)] overflow-hidden md:top-[30%]">
             <h2
               className={`s2a-word ${display} whitespace-nowrap text-center text-[clamp(4rem,26vw,7rem)] text-green/20 md:text-[clamp(6rem,24vw,20rem)]`}
             >
@@ -178,16 +190,16 @@ export default function PourPlayMasterScene() {
             </h2>
           </div>
 
-          <div className="s2b invisible absolute left-5 top-[10%] md:left-20 md:top-[20%]">
+          <div className="s2b invisible absolute left-5 top-[max(10%,6rem)] md:left-20 md:top-[20%]">
             <h2 className={`${display} text-[clamp(3.5rem,19vw,6rem)] text-green md:text-[clamp(5rem,15vw,12rem)]`}>
               {l(t.pourWord)}
             </h2>
             <div className={`${display} -mt-2 text-[clamp(3rem,15vw,5rem)] text-aqeeq/60 md:text-[clamp(4rem,12vw,9rem)]`}>
-              Pour
+              {l(t.pourWord)}
             </div>
           </div>
 
-          <div className="s3 invisible absolute inset-x-0 top-[14%] px-5 md:top-[12%] md:px-20">
+          <div className="s3 invisible absolute inset-x-0 top-[max(18%,9.5rem)] px-5 md:px-20">
             <h2 className={`${display} text-[clamp(4rem,22vw,7rem)] text-green md:text-[clamp(5rem,16vw,13rem)]`}>
               {l(t.sipWord)}
             </h2>
@@ -211,12 +223,12 @@ export default function PourPlayMasterScene() {
         <div className="pointer-events-none absolute inset-0 z-20">
           {/* Stage 1 — Hero */}
           <div className="s1 absolute inset-0">
-            <div className="intro invisible absolute inset-x-0 top-[16%] hidden items-center gap-3 px-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-green/60 md:flex md:px-20 md:text-xs">
+            <div className="intro invisible absolute inset-x-0 top-[16%] hidden items-center gap-3 px-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-green/80 md:flex md:px-20 md:text-xs">
               <span>DIWAN ROASTERY · CAIRO</span>
               <span>·</span>
               <span>{l(t.hero.coffeeForEveryCulture)}</span>
             </div>
-            <div className="intro invisible pointer-events-auto absolute left-5 right-5 top-[max(30%,14rem)] max-w-sm md:bottom-16 md:left-20 md:right-auto md:top-auto">
+            <div className="intro invisible pointer-events-auto absolute left-5 right-5 top-[max(37%,17.5rem)] max-w-sm md:bottom-16 md:left-20 md:right-auto md:top-auto">
               <p className="mb-5 text-sm leading-relaxed text-n500 md:text-base">
                 {l(t.hero.tagline)}
               </p>
@@ -252,7 +264,7 @@ export default function PourPlayMasterScene() {
           {/* Stage 2B — Pour */}
           <div className="s2b invisible absolute inset-0">
             <div className="absolute left-5 right-5 top-[max(30%,14rem)] max-w-xs md:bottom-[14%] md:left-auto md:right-20 md:top-auto">
-              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-green/60">
+              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-green/80">
                 {l(t.pour.label)}
               </span>
               <p className="mt-3 text-sm leading-relaxed text-n500">
@@ -283,8 +295,8 @@ export default function PourPlayMasterScene() {
 
           {/* Stage 3: Sip */}
           <div className="s3 invisible absolute inset-0">
-            <div className="absolute inset-x-0 top-[10%] px-5 md:px-20">
-              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-green/60">
+            <div className="absolute inset-x-0 top-[max(10%,6rem)] px-5 md:px-20">
+              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-green/80">
                 {l(t.sip.label)}
               </span>
             </div>
@@ -292,7 +304,7 @@ export default function PourPlayMasterScene() {
               <h2
                 className={`${display} text-stroke-sandy text-[clamp(4rem,22vw,7rem)] md:text-[clamp(5rem,16vw,13rem)] drop-shadow-[0_6px_24px_rgba(0,0,0,0.35)]`}
               >
-                SIP
+                {l(t.sipWord)}
               </h2>
             </div>
           </div>
@@ -303,7 +315,7 @@ export default function PourPlayMasterScene() {
               <h2 className={`${display} whitespace-pre-line text-4xl text-green sm:text-5xl md:text-6xl`}>
                 {l(t.shopScene.choose)}
               </h2>
-              <p className="mt-2 text-sm text-n400">{l(t.shopScene.findYourCup)}</p>
+              <p className="mt-2 text-sm text-n400 max-md:hidden">{l(t.shopScene.findYourCup)}</p>
               <button
                 onClick={() => setCartOpen(true)}
                 className="mt-3 rounded-full bg-green px-5 py-2 text-[11px] font-bold uppercase tracking-widest text-sandy shadow-md transition hover:bg-green/90"
@@ -312,19 +324,19 @@ export default function PourPlayMasterScene() {
               </button>
             </div>
 
-            <div className="pointer-events-auto absolute inset-x-0 top-[max(26%,12.5rem)] flex snap-x gap-3 overflow-x-auto px-5 py-4 md:contents">
-              <TiltProductCard
-                product={COFFEE_CATALOG[0]}
+            <div className="pointer-events-auto absolute inset-x-0 top-[max(24%,13.5rem)] grid grid-cols-3 gap-2 px-4 md:contents">
+              <CategoryCard
+                category="turkish"
                 defaultRotation={-3}
                 className="snap-center md:absolute md:left-14 md:top-[26%]"
               />
-              <TiltProductCard
-                product={COFFEE_CATALOG[1]}
+              <CategoryCard
+                category="espresso"
                 defaultRotation={2}
                 className="snap-center md:absolute md:bottom-14 md:left-28"
               />
-              <TiltProductCard
-                product={COFFEE_CATALOG[2]}
+              <CategoryCard
+                category="flavored"
                 defaultRotation={-2}
                 className="snap-center md:absolute md:right-14 md:top-[38%]"
               />
@@ -351,7 +363,7 @@ export default function PourPlayMasterScene() {
         </span>
         <button
           onClick={nextStop}
-          aria-label="Jump to next chapter"
+          aria-label={l({ en: "Jump to the next scene", ar: "الانتقال إلى المشهد التالي" })}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-green text-sandy shadow-xl transition hover:scale-105"
         >
           <Compass className="h-5 w-5" />
