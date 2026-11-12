@@ -109,7 +109,7 @@ export default function ProductView({ id }: { id: string }) {
   ];
 
   return (
-    <main id="main" className="page-in relative bg-sandy pb-24 md:pb-0">
+    <main id="main" className="page-in relative bg-sandy">
       <HeaderNav />
       <CartDrawer />
 
@@ -189,7 +189,7 @@ export default function ProductView({ id }: { id: string }) {
               </div>
             </div>
 
-            <div className="mt-8 hidden md:block">
+            <div className="mt-8">
               {variant && <AddToBagButton lineKey={lineKey(item.id, variant.key)} qty={qty} disabled={!available} flyImage={item.image} className="w-full" />}
             </div>
             <p className="mt-4 text-sm text-n500">{l({ en: "Cash on delivery. We call you to confirm before it ships.", ar: "الدفع عند الاستلام. نتصل بك لتأكيد الطلب قبل الشحن." })}</p>
@@ -251,17 +251,6 @@ export default function ProductView({ id }: { id: string }) {
             })}
           </div>
         </section>
-      )}
-
-      {/* mobile buy bar */}
-      {variant && (
-        <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-4 border-t border-n200 bg-sandy/95 px-5 py-3 backdrop-blur md:hidden">
-          <div>
-            <p className="text-xs text-n500">{name}</p>
-            <p className="font-semibold text-green"><bdi>{money(variant.price * qty, lang)}</bdi></p>
-          </div>
-          <AddToBagButton lineKey={lineKey(item.id, variant.key)} qty={qty} disabled={!available} flyImage={item.image} size="sm" />
-        </div>
       )}
 
       <Footer />
