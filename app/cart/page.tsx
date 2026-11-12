@@ -33,7 +33,7 @@ export default function CartPage() {
             <Link href="/shop" className="btn btn-primary">{l({ en: "Browse the shop", ar: "تصفّح المتجر" })}</Link>
           </div>
         ) : (
-          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <div className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
             <CartLines />
             <aside className="h-fit rounded-2xl border border-n200 bg-n100 p-6 lg:sticky lg:top-28">
               <OrderSummary />

@@ -35,10 +35,14 @@ const plex = IBM_Plex_Sans_Arabic({ subsets: ["arabic", "latin"], weight: ["300"
 const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-cormorant", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "DIWAN — قهوة لكل ثقافة",
-  description:
-    "ديوان قهوة للذوق المصري. طعم يعتمد عليه، واختيار واضح، وتجربة لها شخصية. Coffee for every culture.",
+  title: { default: "DIWAN ديوان | Coffee for every culture", template: "%s | DIWAN ديوان" },
+  description: "Cairo coffee roastery. Nine blends: Turkish, espresso and flavored. قهوة ديوان.",
+  applicationName: "DIWAN",
+  openGraph: { siteName: "DIWAN ديوان", type: "website", images: ["/assets/diwan/Diwan_OpenGraph_Green_1200x630.png"] },
+  twitter: { card: "summary_large_image" },
 };
+
+export const viewport = { themeColor: "#0E3A33" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

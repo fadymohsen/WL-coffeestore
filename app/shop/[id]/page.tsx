@@ -11,8 +11,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const p = PRODUCTS.find((x) => x.id === id);
   return {
-    title: p ? `${p.nameEn} | DIWAN ديوان` : "DIWAN ديوان",
-    description: p ? p.copyEn : undefined,
+    title: p ? p.nameEn : "Product",
+    description: p ? `${p.nameEn}, ${p.copyEn}`.slice(0, 150) : undefined,
   };
 }
 

@@ -114,7 +114,7 @@ export default function CheckoutPage() {
                   <Link href="/shop" className="btn btn-primary mt-5">{l({ en: "Browse the shop", ar: "تصفّح المتجر" })}</Link>
                 </div>
               ) : (
-                <form onSubmit={submit} noValidate aria-label={l({ en: "Checkout", ar: "إتمام الطلب" })} className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
+                <form onSubmit={submit} noValidate aria-label={l({ en: "Checkout", ar: "إتمام الطلب" })} className="mt-10 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
                   <div className="space-y-10">
                     <fieldset>
                       <legend className="mb-4 font-editorial text-2xl font-semibold text-green">{l({ en: "Contact", ar: "بيانات التواصل" })}</legend>
