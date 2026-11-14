@@ -1,7 +1,25 @@
+import type { Metadata } from "next";
 import HeaderNav from "@/components/layout/HeaderNav";
 import CartDrawer from "@/components/layout/CartDrawer";
 import Footer from "@/components/layout/Footer";
 import PourPlayMasterScene from "@/components/scrollytelling/PourPlayMasterScene";
+
+export const metadata: Metadata = {
+  title: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
+  description:
+    "Discover DIWAN's signature coffee rituals — from bean to cup. Premium Egyptian coffee blends, specialty single-origins & Turkish coffee. | اكتشف طقوس قهوة ديوان — من الحبة للفنجان. خلطات قهوة مصرية فاخرة، قهوة مختصة، وقهوة تركي.",
+  openGraph: {
+    title: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
+    description:
+      "Discover DIWAN's signature coffee rituals — from bean to cup. Premium Egyptian blends, specialty & Turkish coffee. | اكتشف طقوس قهوة ديوان — من الحبة للفنجان.",
+    url: "/",
+  },
+  twitter: {
+    title: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
+    description:
+      "Discover DIWAN's signature coffee rituals — from bean to cup. | اكتشف طقوس قهوة ديوان — من الحبة للفنجان.",
+  },
+};
 
 export default function HomePage() {
   return (
