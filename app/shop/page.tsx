@@ -10,11 +10,20 @@ export const metadata: Metadata = {
     description:
       "Premium blends, single-origin specialty & Turkish coffee. Uns, Majlis, Rihla, Sultan — find your perfect cup. | خلطات فاخرة، قهوة مختصة وقهوة تركي. أُنس، مجلس، رحلة، سلطان — اختار فنجانك.",
     url: "/shop",
+    images: [
+      {
+        url: "/og-shop.png",
+        width: 1200,
+        height: 630,
+        alt: "Shop DIWAN Coffee | تسوّق قهوة ديوان",
+      },
+    ],
   },
   twitter: {
     title: "Shop DIWAN Coffee | تسوّق قهوة ديوان",
     description:
       "Premium blends, specialty & Turkish coffee — find your perfect cup. | خلطات فاخرة، قهوة مختصة وقهوة تركي — اختار فنجانك.",
+    images: ["/og-shop.png"],
   },
   alternates: {
     canonical: "/shop",

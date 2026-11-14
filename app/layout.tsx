@@ -25,7 +25,7 @@ const notoArabic = Noto_Naskh_Arabic({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://diwancoffee.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://wl-coffeestore-o0vd8l50t-veliq.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -51,12 +51,21 @@ export const metadata: Metadata = {
     description:
       "Premium Egyptian coffee crafted for every culture. Reliable taste, clear choice, and an experience with character. | قهوة مصرية فاخرة لكل ثقافة. طعم يعتمد عليه، واختيار واضح، وتجربة لها شخصية.",
     url: SITE_URL,
+    images: [
+      {
+        url: "/og-home.png",
+        width: 1200,
+        height: 630,
+        alt: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
     description:
       "Premium Egyptian coffee crafted for every culture. | قهوة مصرية فاخرة لكل ثقافة.",
+    images: ["/og-home.png"],
   },
   alternates: {
     canonical: SITE_URL,
