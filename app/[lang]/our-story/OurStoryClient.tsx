@@ -3,12 +3,13 @@
 import Link from "next/link";
 import HeaderNav from "@/components/layout/HeaderNav";
 import Footer from "@/components/layout/Footer";
-import { useLocalized, translations } from "@/lib/i18n";
+import { useLocalized, useLocalePath, translations } from "@/lib/i18n";
 
 const t = translations.ourStory;
 
 export default function OurStoryClient() {
   const l = useLocalized();
+  const lp = useLocalePath();
 
   return (
     <main className="relative">
@@ -116,7 +117,7 @@ export default function OurStoryClient() {
               {l(t.ctaTitle)}
             </h3>
             <Link
-              href="/shop"
+              href={lp("/shop")}
               className="mt-2 rounded-full bg-sandy px-8 py-3 text-sm font-semibold text-green transition hover:bg-sandy/90"
             >
               {l(t.ctaButton)}

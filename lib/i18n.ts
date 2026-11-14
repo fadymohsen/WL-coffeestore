@@ -24,6 +24,12 @@ export function useDir() {
   return lang === "ar" ? "rtl" : "ltr";
 }
 
+/** Returns the current path prefixed with locale, e.g. useLocalePath()("/shop") → "/en/shop" */
+export function useLocalePath() {
+  const lang = useLangStore((s) => s.lang);
+  return (path: string) => `/${lang}${path}`;
+}
+
 // Structured translations for components with many strings
 export const translations = {
   nav: {

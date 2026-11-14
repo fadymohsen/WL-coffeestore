@@ -1,17 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useLocalized, translations } from "@/lib/i18n";
+import { useLocalized, useLocalePath, translations } from "@/lib/i18n";
 
 const t = translations.footer;
 const tNav = translations.nav;
 
 export default function Footer() {
   const l = useLocalized();
+  const lp = useLocalePath();
 
   const LINKS = [
-    { href: "/shop", label: l(tNav.shop) },
-    { href: "/our-story", label: l(tNav.ourStory) },
+    { href: lp("/shop"), label: l(tNav.shop) },
+    { href: lp("/our-story"), label: l(tNav.ourStory) },
   ];
 
   return (

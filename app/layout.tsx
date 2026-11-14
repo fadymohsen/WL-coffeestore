@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans, Noto_Naskh_Arabic } from "next/font/google";
 import "./globals.css";
-import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
-import LangSync from "@/components/providers/LangSync";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -29,51 +27,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://wl-coffeestore-o0v
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
-    template: "%s | DIWAN Coffee",
-  },
-  description:
-    "DIWAN — premium Egyptian coffee crafted for every culture. Reliable taste, clear choice, and an experience with character. | ديوان — قهوة مصرية فاخرة لكل ثقافة. طعم يعتمد عليه، واختيار واضح، وتجربة لها شخصية.",
-  keywords: [
-    "DIWAN", "ديوان", "coffee", "قهوة", "Egyptian coffee", "قهوة مصرية",
-    "specialty coffee", "Turkish coffee", "قهوة تركي", "blend", "بن",
-    "Cairo", "القاهرة", "Egypt", "مصر",
-  ],
   authors: [{ name: "DIWAN Coffee" }],
   creator: "DIWAN Coffee",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    alternateLocale: "ar_EG",
-    siteName: "DIWAN Coffee | ديوان قهوة",
-    title: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
-    description:
-      "Premium Egyptian coffee crafted for every culture. Reliable taste, clear choice, and an experience with character. | قهوة مصرية فاخرة لكل ثقافة. طعم يعتمد عليه، واختيار واضح، وتجربة لها شخصية.",
-    url: SITE_URL,
-    images: [
-      {
-        url: "/og-home.png",
-        width: 1200,
-        height: 630,
-        alt: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "DIWAN — Coffee for Every Culture | قهوة لكل ثقافة",
-    description:
-      "Premium Egyptian coffee crafted for every culture. | قهوة مصرية فاخرة لكل ثقافة.",
-    images: ["/og-home.png"],
-  },
-  alternates: {
-    canonical: SITE_URL,
-    languages: {
-      "en": SITE_URL,
-      "ar": SITE_URL,
-    },
-  },
   robots: {
     index: true,
     follow: true,
@@ -87,12 +42,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable}`}>
+    <html suppressHydrationWarning className={`${playfair.variable} ${jakarta.variable} ${notoArabic.variable}`}>
       <body suppressHydrationWarning className="font-sans antialiased">
-        <LangSync />
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        {children}
       </body>
     </html>
   );

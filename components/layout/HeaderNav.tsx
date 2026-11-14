@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { Globe, Menu, Search, ShoppingBag, X } from "lucide-react";
 import { scrollToProgress } from "@/components/providers/SmoothScrollProvider";
 import { useShopStore } from "@/store/useShopStore";
-import { useLangStore, useLocalized, translations } from "@/lib/i18n";
+import { useLangStore, useLocalized, useLocalePath, translations } from "@/lib/i18n";
 
 const t = translations.nav;
 
@@ -16,22 +17,32 @@ export default function HeaderNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const lang = useLangStore((s) => s.lang);
-  const toggle = useLangStore((s) => s.toggle);
   const l = useLocalized();
+  const lp = useLocalePath();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const switchLang = () => {
+    const newLang = lang === "en" ? "ar" : "en";
+    const newPath = pathname.replace(/^\/(en|ar)/, `/${newLang}`);
+    router.push(newPath);
+  };
 
   const NAV_LINKS = [
-    { href: "/shop", label: l(t.shop) },
-    { href: "/our-story", label: l(t.ourStory) },
+    { href: lp("/shop"), label: l(t.shop) },
+    { href: lp("/our-story"), label: l(t.ourStory) },
   ];
+
+  const homePath = lp("");
 
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-4 md:px-12 lg:px-20">
         {/* Logo */}
         <Link
-          href="/"
+          href={homePath}
           onClick={(e) => {
-            if (window.location.pathname === "/") {
+            if (pathname === homePath) {
               e.preventDefault();
               scrollToProgress(0);
             }
@@ -60,7 +71,7 @@ export default function HeaderNav() {
         {/* Actions */}
         <div className="flex items-center gap-1 md:gap-3">
           <button
-            onClick={toggle}
+            onClick={switchLang}
             aria-label="Switch language"
             className="flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-green transition hover:bg-green/10"
           >
@@ -113,14 +124,14 @@ export default function HeaderNav() {
               </Link>
             ))}
             <Link
-              href="/"
+              href={homePath}
               onClick={() => setMobileOpen(false)}
               className="mt-4 rounded-full border-2 border-green px-8 py-3 text-sm font-semibold text-green transition hover:bg-green hover:text-sandy"
             >
               {l(t.home)}
             </Link>
             <button
-              onClick={() => { toggle(); setMobileOpen(false); }}
+              onClick={() => { switchLang(); setMobileOpen(false); }}
               className="flex items-center gap-2 rounded-full bg-green/10 px-6 py-3 text-sm font-semibold text-green"
             >
               <Globe className="h-4 w-4" />
